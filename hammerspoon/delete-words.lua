@@ -12,74 +12,83 @@ end
 
 
 -- Use option + h to delete previous word
- local oh = hs.window.filter.new():setFilters({iTerm2 = false, Terminal = false, Emacs = false})
-enableHotkeyForWindowsMatchingFilter(oh, hs.hotkey.new({'alt'}, 'h', function()
-  keyUpDown({'alt'}, 'delete')
-end))
+hs.hotkey.bind({'alt'}, 'h', function()
+      -- If we're in the terminal, then temporarily disable our custom control+k
+      -- hotkey used for pane navigation, then fire control+k to delete to the end
+      -- of the line, and then renable the control+k hotkey.
+      --
+      -- If we're not in the terminal, then just select to the end of the line and
+      -- then delete the selected text.
+      if isInTerminal() then
+    hotkeyForAltH = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey_AltH)
+      return hotkey_AltH.idx == '⌃W'
+    end)
+    if hotkeyForAltH then hotkeyForAltH:disable() end
 
--- hs.hotkey.bind({'alt'}, 'h', function()
---   if isInTerminal() then
---      keyUpDown({'ctrl'}, 'w')
---   else
---      keyUpDown({'alt'}, 'delete')
---   end
--- end)
+    keyUpDown({'ctrl'}, 'w')
+
+    -- Allow some time for the control+k keystroke to fire asynchronously before
+    -- we re-enable our custom control+k hotkey.
+    hs.timer.doAfter(0.2, function()
+      if hotkeyForAltH then hotkeyForAltH:enable() end
+    end)
+      elseif isInEmacs() then
+         hotkeyForAltH2 = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey2_AltH)
+      return hotkey2_AltH.idx == '⌥H'
+    end)
+    if hotkeyForAltH2 then hotkeyForAltH2:disable() end
+
+    keyUpDown({'alt'}, 'h')
+
+    -- Allow some time for the control+k keystroke to fire asynchronously before
+    -- we re-enable our custom control+k hotkey2.
+    hs.timer.doAfter(0.2, function()
+      if hotkeyForAltH2 then hotkeyForAltH2:enable() end
+    end)
+      else
+    keyUpDown({'alt'}, 'delete')
+  end
+end)
 
 -- Use option + l to delete next word
-local ol = hs.window.filter.new():setFilters({iTerm2 = false, Terminal = false, Emacs = false})
-enableHotkeyForWindowsMatchingFilter(ol, hs.hotkey.new({'alt'}, 'l', function()
-  keyUpDown({'alt'}, 'forwardelete')
-end))
+hs.hotkey.bind({'alt'}, 'l', function()
+      -- If we're in the terminal, then temporarily disable our custom control+k
+      -- hotkey used for pane navigation, then fire control+k to delete to the end
+      -- of the line, and then renable the control+k hotkey.
+      --
+      -- If we're not in the terminal, then just select to the end of the line and
+      -- then delete the selected text.
+      if isInTerminal() then
+    hotkeyForAltL = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey_AltL)
+      return hotkey_AltL.idx == 'escape D'
+    end)
+    if hotkeyForAltL then hotkeyForAltL:disable() end
 
--- hs.hotkey.bind({'alt'}, 'l', function()
---   if isInTerminal() then
---     keyUpDown({}, 'escape')
---     keyUpDown({}, 'd')
---   else
---      keyUpDown({'alt'}, 'forwarddelete')
---      end
--- end)
+    keyUpDown({}, 'escape')
+    keyUpDown({}, 'd')
 
--- hs.hotkey.bind({'alt'}, 'l', function()
---       -- If we're in the terminal, then temporarily disable our custom control+k
---       -- hotkey used for pane navigation, then fire control+k to delete to the end
---       -- of the line, and then renable the control+k hotkey.
---       --
---       -- If we're not in the terminal, then just select to the end of the line and
---       -- then delete the selected text.
---       if isInTerminal() then
---     hotkeyForAltL = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey_AltL1)
---       return hotkey_AltL1.idx == 'escape d'
---     end)
---     if hotkeyForAltL then hotkeyForAltL:disable() end
+    -- Allow some time for the control+k keystroke to fire asynchronously before
+    -- we re-enable our custom control+k hotkey.
+    hs.timer.doAfter(0.2, function()
+      if hotkeyForAltL then hotkeyForAltL:enable() end
+    end)
+      elseif isInEmacs() then
+         hotkeyForAltL2 = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey2_AltL)
+      return hotkey2_AltL.idx == '⌥L'
+    end)
+    if hotkeyForAltL2 then hotkeyForAltL2:disable() end
 
---     keyUpDown({}, 'escape')
---     keyUpDown({}, 'd')
+    keyUpDown({'alt'}, 'l')
 
---     -- Allow some time for the control+k keystroke to fire asynchronously before
---     -- we re-enable our custom control+k hotkey.
---     hs.timer.doAfter(0.2, function()
---       if hotkeyForAltL then hotkeyForAltL:enable() end
---     end)
---       elseif isInEmacs() then
---          hotkeyForAltL2 = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey_AltL2)
---       return hotkey_AltL2.idx == '⌥l'
---     end)
---     if hotkeyForAltL2 then hotkeyForAltL2:disable() end
-
---     keyUpDown({'alt'}, 'l')
-
---     -- Allow some time for the control+k keystroke to fire asynchronously before
---     -- we re-enable our custom control+k hotkey2.
---     hs.timer.doAfter(0.2, function()
---       if hotkeyForAltL2 then hotkeyForAltL2:enable() end
---     end)
---       else
---     keyUpDown({'alt'}, 'forwarddelete')
---   end
--- end)
-
-
+    -- Allow some time for the control+k keystroke to fire asynchronously before
+    -- we re-enable our custom control+k hotkey2.
+    hs.timer.doAfter(0.2, function()
+      if hotkeyForAltL2 then hotkeyForAltL2:enable() end
+    end)
+      else
+    keyUpDown({'alt'}, 'forwarddelete')
+  end
+end)
 
 -- Use control + u to delete to beginning of line
 --
@@ -109,10 +118,10 @@ hs.hotkey.bind({'ctrl'}, ';', function()
       -- If we're not in the terminal, then just select to the end of the line and
       -- then delete the selected text.
       if isInTerminal() then
-    hotkeyForAltL = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey)
+    hotkeyForControlK = hs.fnutils.find(hs.hotkey.getHotkeys(), function(hotkey)
       return hotkey.idx == '⌃K'
     end)
-    if hotkeyForAltL then hotkeyForControlK:disable() end
+    if hotkeyForControlK then hotkeyForControlK:disable() end
 
     keyUpDown({'ctrl'}, 'k')
 
