@@ -45,7 +45,6 @@
                         "manipulators": [
                             {
                                 "description": "Map CapsLock (Enter) to Ctrl, or ESC (Enter) if pressed alone",
-                                "type": "basic",
                                 "from": {
                                     "key_code": "return_or_enter",
                                     "modifiers": {
@@ -64,7 +63,8 @@
                                     {
                                         "key_code": "return_or_enter"
                                     }
-                                ]
+                                ],
+                                "type": "basic"
                             }
                         ]
                     },
@@ -72,7 +72,6 @@
                         "manipulators": [
                             {
                                 "description": "Map Shift to Shift, or Parenthesis if pressed alone",
-                                "type": "basic",
                                 "from": {
                                     "key_code": "left_shift",
                                     "modifiers": {
@@ -94,10 +93,10 @@
                                             "left_shift"
                                         ]
                                     }
-                                ]
+                                ],
+                                "type": "basic"
                             },
                             {
-                                "type": "basic",
                                 "from": {
                                     "key_code": "right_shift",
                                     "modifiers": {
@@ -119,7 +118,8 @@
                                             "left_shift"
                                         ]
                                     }
-                                ]
+                                ],
+                                "type": "basic"
                             }
                         ]
                     },
@@ -882,23 +882,23 @@
                         "key_code": "left_command"
                     }
                 },
-                        {
-                            "from": {
-                                "key_code": "right_option"
-                            },
-                            "to": {
-                                "key_code": "right_command"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "right_command"
-                            },
-                            "to": {
-                                "key_code": "right_option"
-                            }
-                        }
-                    ],
+                {
+                    "from": {
+                        "key_code": "right_command"
+                    },
+                    "to": {
+                        "key_code": "right_option"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "right_option"
+                    },
+                    "to": {
+                        "key_code": "right_command"
+                    }
+                }
+            ],
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
                 "country_code": 0,
