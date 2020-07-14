@@ -13,6 +13,7 @@ return {
   { 'm', 'Messages' },          -- "M" for "Messages"
   { 'n', 'Notability' },        -- "N" for "Notability"
   { 'o', 'Microsoft Outlook' }, -- "O" for "Outlook"
+  { 'r', 'Zotero' },            -- "R" for "Reference Manager (Zotero)"
   { 's', 'Slack' },             -- "S" for "Slack"
   { 't', 'iTerm' },             -- "T" for "Terminal"
   { 'x', 'Microsoft Excel' },   -- "X" for "Excel"
