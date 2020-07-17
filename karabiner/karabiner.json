@@ -44,7 +44,7 @@
                     {
                         "manipulators": [
                             {
-                                "description": "Map CapsLock (Enter) to Ctrl, or ESC (Enter) if pressed alone",
+                                "description": "Map Enter to Ctrl, or Enter if pressed alone",
                                 "from": {
                                     "key_code": "return_or_enter",
                                     "modifiers": {
@@ -532,7 +532,7 @@
                         ]
                     },
                     {
-                        "description": "(S)uper(D)uper + Space -> Shift",
+                        "description": "(S)uper(D)uper + V -> Shift",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -543,7 +543,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "spacebar",
+                                    "key_code": "v",
                                     "modifiers": {
                                         "optional": [
                                             "any"
@@ -559,6 +559,63 @@
                             }
                         ]
                     },
+                    {
+                        "description": "(S)uper(D)uper + G -> Delete",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "superduper-mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "g",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "delete_or_backspace"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "(S)uper(D)uper + ; -> Forward Delete",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "superduper-mode",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "semicolon",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "delete_forward"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+
                     {
                         "description": "(S)uper(D)uper + U -> First Tab",
                         "manipulators": [
