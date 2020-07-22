@@ -11,7 +11,7 @@ return {
   { 'e', 'Emacs' },             -- "e" for "Editor"
   { 'f', 'Finder' },            -- "f" for "Finder"
   { 'm', 'Messages' },          -- "m" for "Messages"
-  { 'M', 'XMind' },             -- "M" for "Xmind Mind-map"
+  { 'l', 'XMind' },             -- "l" for "links in my Xmind Mind-map"
   { 'n', 'Notability' },        -- "n" for "Notability"
   { 'o', 'Microsoft Outlook' }, -- "o" for "Outlook"
   { 'p', 'PDF Expert' },        -- "p" for "PDF Expert"
