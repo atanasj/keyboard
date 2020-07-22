@@ -10,7 +10,7 @@
                 "parameters": {
                     "basic.simultaneous_threshold_milliseconds": 50,
                     "basic.to_delayed_action_delay_milliseconds": 500,
-                    "basic.to_if_alone_timeout_milliseconds": 1000,
+                    "basic.to_if_alone_timeout_milliseconds": 500,
                     "basic.to_if_held_down_threshold_milliseconds": 500,
                     "mouse_motion_to_scroll.speed": 100
                 },
@@ -504,7 +504,7 @@
                         ]
                     },
                     {
-                        "description": "(S)uper(D)uper + F -> Command",
+                        "description": "(S)uper(D)uper + G -> Command",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -515,7 +515,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "f",
+                                    "key_code": "g",
                                     "modifiers": {
                                         "optional": [
                                             "any"
@@ -560,7 +560,7 @@
                         ]
                     },
                     {
-                        "description": "(S)uper(D)uper + G -> Delete",
+                        "description": "(S)uper(D)uper + F -> Delete",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -571,7 +571,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "g",
+                                    "key_code": "f",
                                     "modifiers": {
                                         "optional": [
                                             "any"
@@ -615,7 +615,6 @@
                             }
                         ]
                     },
-
                     {
                         "description": "(S)uper(D)uper + U -> First Tab",
                         "manipulators": [
