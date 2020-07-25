@@ -504,7 +504,7 @@
                         ]
                     },
                     {
-                        "description": "(S)uper(D)uper + G -> Command",
+                        "description": "(S)uper(D)uper + F -> Command",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -515,7 +515,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "g",
+                                    "key_code": "f",
                                     "modifiers": {
                                         "optional": [
                                             "any"
@@ -560,7 +560,7 @@
                         ]
                     },
                     {
-                        "description": "(S)uper(D)uper + F -> Delete",
+                        "description": "(S)uper(D)uper + G -> Delete",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -571,7 +571,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "f",
+                                    "key_code": "g",
                                     "modifiers": {
                                         "optional": [
                                             "any"
