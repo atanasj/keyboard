@@ -25,9 +25,9 @@
 --------------------------------------------------------------------------------
 
 return {
-  modifiers = {'ctrl'},
+  modifiers = {'shift', 'ctrl', 'alt', 'cmd'},
   showHelp  = false,
-  trigger   = 's',
+  trigger   = 'w',
   mappings  = {
     { {},         'return', 'maximize' },
     { {},         'space',  'centerWithFullHeight' },

@@ -3,8 +3,9 @@
 -- To launch _your_ most commonly-used apps via Hyper Mode, create a copy of
 -- this file, save it as `hyper-apps.lua`, and edit the table below to configure
 -- your preferred shortcuts.
+-- NOTE 'w' is reserved as leader key for windows momvement
 return {
-  { 'a', 'iTunes' },            -- "a" for "Apple Music"
+  { 'a', 'Music' },            -- "a" for "Apple Music"
   { 'b', 'Firefox' },           -- "b" for "Browser"
   { 'c', 'Calendar' },          -- "c  for "Calendar"
   { 'd', 'Trello' },            -- "d" for "Do!" ... or "Done!"
