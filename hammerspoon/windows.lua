@@ -230,7 +230,7 @@ local trigger   = windowMappings.trigger
 local mappings  = windowMappings.mappings
 
 function getModifiersStr(modifiers)
-  local modMap = { shift = '⇧', ctrl = '⌃', alt = '⌥', cmd = '⌘' }
+  local modMap = { shift = '⇧', ctrl = '⌃', alt = '⌥', cmd = '⌘', shyper = 'shift+ctrl+alt+cmd' }
   local retVal = ''
 
   for i, v in ipairs(modifiers) do
