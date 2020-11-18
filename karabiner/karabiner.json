@@ -411,6 +411,31 @@
                     {
                         "manipulators": [
                             {
+                                "description": "Change f20 to Shopco (i.e., shift+option+control)",
+                                "from": {
+                                    "key_code": "f20",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_option",
+                                            "left_control"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
                                 "description": "Map Enter to Ctrl, or Enter if pressed alone",
                                 "from": {
                                     "key_code": "return_or_enter",
