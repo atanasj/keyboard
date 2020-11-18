@@ -386,6 +386,31 @@
                     {
                         "manipulators": [
                             {
+                                "description": "Change left fn to Super (i.e., shift+command+control)",
+                                "from": {
+                                    "key_code": "fn",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_command",
+                                            "left_control"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
                                 "description": "Map Enter to Ctrl, or Enter if pressed alone",
                                 "from": {
                                     "key_code": "return_or_enter",
@@ -2082,6 +2107,14 @@
                         },
                         {
                             "from": {
+                                "key_code": "left_control"
+                            },
+                            "to": {
+                                "key_code": "right_command"
+                            }
+                        },
+                        {
+                            "from": {
                                 "key_code": "left_option"
                             },
                             "to": {
@@ -2102,14 +2135,6 @@
                             },
                             "to": {
                                 "key_code": "f20"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "left_control"
-                            },
-                            "to": {
-                                "key_code": "left_command"
                             }
                         }
                     ]
