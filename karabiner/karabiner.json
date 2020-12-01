@@ -436,6 +436,36 @@
                     {
                         "manipulators": [
                             {
+                                "description": "Map Left Arrow to Ctrl+Shift, or Left Arrow if pressed alone",
+                                "from": {
+                                    "key_code": "left_arrow",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "right_control",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ],
+                                        "lazy": true
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "left_arrow"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "manipulators": [
+                            {
                                 "description": "Map Enter to Ctrl, or Enter if pressed alone",
                                 "from": {
                                     "key_code": "return_or_enter",
