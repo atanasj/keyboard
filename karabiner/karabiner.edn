@@ -1,0 +1,327 @@
+{:profiles
+ {:goku {:default true
+         :sim     50
+         :delay   400
+         :alone   400
+         :held    400}
+  }
+
+ :applications {
+                :Emacs ["^org\\.gnu\\.Emacs$"]
+                :Citrix ["^com\\.citrix\\.receiver\\.nomas$"]
+                }
+
+ :tos {
+       :left_paren  {:key :9 :modi [:left_shift] :lazy true}
+       :right_paren {:key :0 :modi [:left_shift] :lazy true}
+       :fn_tab      {:key :fn :lazy true}
+       :r_ctrl      {:key :right_control :lazy true}
+       :l_ctrl      {:key :left_control :lazy true}
+       :l_cmd       {:key :left_command :lazy true}
+       :shyper      {:key :right_command :modi [:right_option :right_shift :right_control]}
+       :hyper       {:key :right_command :modi [:right_option :right_control]}
+       :super       {:key :right_shift :modi [:right_command :right_control]}
+       :shopco      {:key :right_shift :modi [:right_option :right_control]}
+       }
+
+ :templates {
+             :open "open \"%s\""
+             :alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
+             :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             }
+
+ ;; layers are...
+ :layers {
+          ;; NOTE for this setting to work need to remap caps_lock to control
+          ;; key in settings
+          :hyper-mode {:key :caps_lock :alone {:key :escape} :condi :!Emacs}
+          :tab-mode              {:key     :tab
+                                  :afterup [{:set ["yabai-move-mode" 0]}
+                                            {:set ["yabai-scale-mode" 0]}
+                                            {:set ["spec-mode" 0]}]
+                                  :condi   [:!comma-mode :!period-mode]}
+          :yabai-move-mode       {:key :f :condi :tab-mode}
+          :yabai-scale-mode      {:key :c :condi :tab-mode}
+          :spec-mode             {:key :s :condi :tab-mode}
+          }
+ :simlayers {
+ ;; :sim [:right_control :right_option :right_shift :right_command]
+ ;;         :simo {:interrupt true
+ ;;                :dorder :strict
+ ;;                :uorder :strict_inverse
+ ;;                :afterup {:set ["SHyper" 1]}}
+ ;;                {
+             ;; :f-mode {:key :f}
+             ;; :o-mode {:key :o}
+             ;; :h-mode {:key :h}
+             ;; :q-mode {:key :q}
+             :launch-mode {:key :a}
+             ;; :hyper-mode {:key :l_ctrl}
+             ;; :mouse_keys_mode_v4    {:key :d :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
+             }
+ :main [
+        ;; remap keys
+        {:des   "caps_lock to esc, to ctrl as modifier"
+         :rules [[:##caps_lock :l_ctrl nil {:alone :escape}]]}
+        {:des   "return_enter to return_enter, to ctrl as modifier"
+         :rules [[:##return_or_enter :r_ctrl nil {:alone :return_or_enter}]]}
+        {:des   "left_shift to paranthesis, or left_shift as modifier"
+         :rules [[:##left_shift :left_shift nil {:alone :left_paren}]]}
+        {:des   "right_shift to paranthesis, or right_shift as modifier"
+         :rules [[:##right_shift :right_shift nil {:alone :right_paren}]]}
+        ;; {:des   "tab to tab, or fn as modifier"
+        ;;  :rules [[:##tab :fn_tab nil {:alone :tab}]]}
+        {:des   "left_command to left_option"
+         :rules [[:##left_command :left_option]]}
+        {:des   "left_option to left_command"
+         :rules [[:##left_option :left_command]]}
+        {:des   "SHyper"
+         :rules [[:##left_control :shyper]]}
+        {:des   "Hyper"
+         :rules [[:##right_command :hyper]]}
+        {:des   "fn to Super"
+         :rules [[:##fn :super]]}
+        {:des   "left_control to shopco"
+         :rules [[:##right_option :shopco]]}
+
+        ;; app launcher mode
+        {:des "launch mode"
+         :rules [:launch-mode
+                 [:e [:open "/Applications/Emacs.app"]]
+                 [:f [:open "/System/Library/CoreServices/Finder.app"]]
+                 [:b [:open "/Applications/firefox.app"]]
+                 [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                 [:p [:open "/Applications/PDF Expert.app"]]
+                 [:o [:open "/Applications/Microsoft Outlook.app"]]
+                 [:t [:open "/Applications/Alacritty.app"]]
+                 [:n [:open "/Applications/Notability.app"]]
+                 [:r [:open "/Applications/Zotero.app"]]
+                 [:x [:open "/Applications/Microsoft Excel.app"]]
+                 [:d [:open "/Applications/Discord.app"]]
+                 [:l [:open "/Applications/XMind.app"]]
+                 [:z [:open "/Applications/zoom.us.app"]]
+                 ]}
+
+        {:des "Hyper Mode - Control"
+         :rules [:!Emacs :hyper-mode
+                 [:a :!Ta]
+                 [:c :!Tc]
+                 [:d :!Td]
+                 [:z :!Tz]
+                 [:!Rz :!RCz]
+                 [:v :!Cv]
+                 ]}
+
+        {:des "Hyper Mode - Navigation [VI style]"
+         :rules [:!Emacs :hyper-mode
+                 [:j :down_arrow]
+                 [:k :up_arrow]
+                 [:h :left_arrow]
+                 [:l :right_arrow]
+                 [:b :!Oleft_arrow]
+                 [:w :!Oright_arrow]
+                 [:y :home]
+                 [:u :page_up]
+                 [:i :page_down]
+                 [:o :end]
+                 [:!Cj :!Sdown_arrow]
+                 [:!Ck :!Sup_arrow]
+                 [:!Ch :!Sleft_arrow]
+                 [:!Cl :!Sright_arrow]
+                 [:!Cb :!SOleft_arrow]
+                 [:!Cw :!SOright_arrow]
+                 [:!Cu :!Shome]
+                 [:!Ci :!Send]
+                 [:!OWj {:mkey {:vwheel 32}}]
+                 [:!OWk {:mkey {:vwheel -32}}]
+                 [:!OWh {:mkey {:hwheel 32}}]
+                 [:!OWl {:mkey {:hwheel -32}}]
+                 [:!Oj {:mkey {:y 1536}}]
+                 [:!Ok {:mkey {:y -1536}}]
+                 [:!Oh {:mkey {:x -1536}}]
+                 [:!Ol {:mkey {:x 1536}}]
+                 [:!ORj {:mkey {:y 1536 :speed 0.5}}]
+                 [:!ORk {:mkey {:y -1536 :speed 0.5}}]
+                 [:!ORh {:mkey {:x -1536 :speed 0.5}}]
+                 [:!ORl {:mkey {:x 1536 :speed 0.5}}]]}
+
+        {:des "Hyper Mode - Mousekey"
+         :rules [:!Emacs :hyper-mode
+                 [:down_arrow {:mkey {:y 1536}}]
+                 [:up_arrow {:mkey {:y -1536}}]
+                 [:left_arrow {:mkey {:x -1536}}]
+                 [:right_arrow {:mkey {:x 1536}}]
+                 [:return_or_enter {:pkey :button1}]
+                 [:!Creturn_or_enter {:pkey :button2}]]}
+
+        {:des "Hyper Mode - Deletion"
+         :rules [:!Emacs :hyper-mode
+                 [:n :!Odelete_or_backspace]
+                 [:m :delete_or_backspace]
+                 [:comma :delete_forward]
+                 [:period :!Odelete_forward]
+                 [:!Cn :!Cdelete_or_backspace]
+                 [:!Cm :!Cdelete_or_backspace]
+                 [:!Ccomma :!Cdelete_forward]
+                 [:!Cperiod :!Cdelete_forward]]}
+
+        ;; {
+        ;;  :des "Hyper Mode - Misc"
+        ;;  :rules [:!Emacs :hyper-mode
+        ;;          [:escape :caps_lock]
+        ;;          [:grave_accent_and_tilde :!CS5]]
+        ;;  }
+
+         {:des   "yabai mode"
+              :rules [
+                      ;; :yabai-insert-mode
+                      ;; [:h "/usr/local/bin/yabai -m window --insert west"]
+                      ;; [:j "/usr/local/bin/yabai -m window --insert south"]
+                      ;; [:k "/usr/local/bin/yabai -m window --insert north"]
+                      ;; [:l "/usr/local/bin/yabai -m window --insert east"]
+
+                      ;; move windows
+                      :yabai-move-mode
+                      [:h "/usr/local/bin/yabai -m window --warp west"]
+                      [:j "/usr/local/bin/yabai -m window --warp south"]
+                      [:k "/usr/local/bin/yabai -m window --warp north"]
+                      [:l "/usr/local/bin/yabai -m window --warp east"]
+                      ;; scale windows
+                      :yabai-scale-mode
+                      [:h "~/local/bin/yabai-resize left"]
+                      [:j "~/local/bin/yabai-resize down"]
+                      [:k "~/local/bin/yabai-resize up"]
+                      [:l "~/local/bin/yabai-resize right"]
+                      :tab-mode
+                      [:grave_accent_and_tilde "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
+                      ;; focus mode
+                      [:h "/usr/local/bin/yabai -m window --focus west"]
+                      [:j "/usr/local/bin/yabai -m window --focus south"]
+                      [:k "/usr/local/bin/yabai -m window --focus north"]
+                      [:l "/usr/local/bin/yabai -m window --focus east"]
+                      [:n "/usr/local/bin/yabai -m window --focus next"]
+                      [:p "/usr/local/bin/yabai -m window --focus prev"]
+
+                      ;; yabai workspace
+                      ;; [:1 "/usr/local/bin/yabai -m space --focus 1"]
+                      ;; [:2 "/usr/local/bin/yabai -m space --focus 2"]
+                      ;; [:3 "/usr/local/bin/yabai -m space --focus 3"]
+                      ;; [:4 "/usr/local/bin/yabai -m space --focus 4"]
+                      [:a "/usr/local/bin/yabai -m window --toggle float"]
+                      ;; [:0 "/usr/local/bin/yabai -m window --toggle sticky"]
+                      [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+                      [:spacebar "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
+                      [:b "/usr/local/bin/yabai -m window --layout bsp"]
+                      [:m "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+                      [:x "/usr/local/bin/yabai -m window --close"]
+                      [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
+                      [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
+                      [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
+        ;; ;; SuperDuper Mode with S+D (Non-QMK)
+        ;; {:des "SuperDuper <- S+D"
+        ;;  :rules [:!qmk [{:sim [:s :d]
+        ;;                  :simo {:interrupt true
+        ;;                         :dorder :insensitive
+        ;;                         :uorder :insensitive
+        ;;                         :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
+        ;; {:des "A+S+D -> SD+Option"
+        ;;  :rules [:!qmk [{:sim [:a :s :d]
+        ;;                  :simo {:interrupt true
+        ;;                         :dorder :insensitive
+        ;;                         :uorder :insensitive
+        ;;                         :afterup {:set ["superduper-mode" 0]}}} [{:set ["superduper-mode" 1]} :left_option]]]}
+        ;; {:des "S+D+F-> SD+Command"
+        ;;  :rules [:!qmk [{:sim [:s :d :f]
+        ;;                  :simo {:interrupt true
+        ;;                         :dorder :insensitive
+        ;;                         :uorder :insensitive
+        ;;                         :afterup {:set ["superduper-mode" 0]}}} [{:set ["superduper-mode" 1]} :l_cmd]]]}
+        ;; {:des "SuperDuper H -> Left" :rules [:superduper-mode [:##h :left_arrow]]}
+        ;; {:des "SuperDuper J -> Down" :rules [:superduper-mode [:##j :down_arrow]]}
+        ;; {:des "SuperDuper K -> Up" :rules [:superduper-mode [:##k :up_arrow]]}
+        ;; {:des "SuperDuper L -> Right" :rules [:superduper-mode [:##l :right_arrow]]}
+        ;; {:des "SuperDuper F -> Command" :rules [:superduper-mode [:##f :left_command]]}
+        ;; {:des "SuperDuper G -> Delete" :rules [:superduper-mode [:##g :delete_or_backspace]]}
+        ;; {:des "SuperDuper ; -> Forward Delete" :rules [:superduper-mode [:##semicolon :delete_forward]]}
+        ;; {:des "SuperDuper U -> First Tab" :rules [:superduper-mode [:##1 :!CSopen_bracket]]}
+        ;; {:des "SuperDuper I -> Prev Tab" :rules [:superduper-mode [:##i :!CSopen_bracket]]}
+        ;; {:des "SuperDuper O -> Next Tab" :rules [:superduper-mode [:##o :!CSclose_bracket]]}
+        ;; {:des "SuperDuper P -> Last Tab" :rules [:superduper-mode [:##9 :!C9]]}
+        ;; {:des "SuperDuper A -> Option" :rules [:superduper-mode [:##a :left_option]]}
+        ;; {:des "SuperDuper V -> Shift" :rules [:superduper-mode [:##v :left_shift]]}
+        ;; {:des "SuperDuper Z -> Undo" :rules [:superduper-mode [:##z :!Cz]]}
+        ;; {:des "SuperDuper B -> PageUp" :rules [:superduper-mode [:##b :page_up]]}
+        ;; {:des "SuperDuper N -> PageDown" :rules [:superduper-mode [:##n :page_down]]}
+
+        ;; Z for Dev Mode
+        ;; ,-----------------------------------------------------------------------------------.
+        ;; |                                         |      |   -  |   +  |   (  |   )  |      |
+        ;; |------+------+------+------+------+-------------+------+------+------+------+------|
+        ;; |                   N/A                   |   _  |   [  |   ]  |   {  |   }  |      |
+        ;; |------+------+------+------+------+------|------+------+------+------+------+------|
+        ;; |                                         |   =  |   |  |   <  |   >  |   ?  |      |
+        ;; |------+------+------+------+------+------+------+------+------+------+------+------
+        ;; {:des "Q Dev Mode" :rules [:q-mode
+        ;;                           [:u :hyphen]
+        ;;                           [:i :!Sequal_sign] ; +
+        ;;                           [:o :!S9] ; (
+        ;;                           [:p :!S0] ; )
+        ;;                           [:h :!Shyphen] ; _
+        ;;                           [:j :open_bracket]
+        ;;                           [:k :close_bracket]
+        ;;                           [:l :!Sopen_bracket] ; {
+        ;;                           [:semicolon :!Sclose_bracket] ; }
+        ;;                           [:n :equal_sign]
+        ;;                           [:m :!Sbackslash] ; |
+        ;;                           [:comma :!Scomma] ; <
+        ;;                           [:period :!Speriod] ; >
+        ;;                           [:slash :!Sslash] ; ?
+        ;;                           ]}
+
+                                        ; ThumbSense (rev 3) https://pqrs.org/osx/karabiner/complex_modifications/#thumbsense
+        ;; {:des "ThumbSense Mode" :rules [[:c :!Cc ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:v :!Cv ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:f {:pkey :button1} ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:j {:pkey :button1} ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:spacebar {:pkey :button1} ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:d {:pkey :button2} ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:k {:pkey :button2} ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:g :!Copen_bracket ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:h :!Cclose_bracket ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 [:w :!Cw ["multitouch_extension_finger_count_total" 1]]
+        ;;                                 ]}
+        ]
+ ;; code won't read cheatsheet section
+ ;; ! stand for mandatory
+ ;; # stand for optional
+ ;; C T O S for left command control optional shift
+ ;; F for fn
+ ;; need to prefix C T O S F with ! or #
+ :cheatsheet {:!Ca "command a" ;; mandatory left_command
+              :!Ta "control a" ;; mandatory left_control
+              :!Oa "option a"
+              :!Sa "shift a"
+              :#Sa "shift a" ;; keycode a, optional left_shift
+              :!CTOa "command control option a"
+              :!Cspacebar "command space"
+              :!Fa "fn a"
+              :##a "keycode a optional any"
+              :!!a "mandatory hyper(control command option shift) a "
+              :sample-configurations [
+                                      {:des "Caps lock mode / Esc" :rules [[:##caps_lock {:set ["caps-lock-mode" 1]} nil {:alone :escape :afterup {:set ["caps-lock-mode" 0]}}]]}
+                                      {:des "Caps vim navigation" :rules [:caps-lock-mode [:h :left_arrow] [:j :down_arrow] [:k :up_arrow] [:l :right_arrow]]}
+                                      ]
+              }}
+;; !  | means mandatory
+;; #  | means optional
+;; C  | left_command
+;; T  | left_control
+;; O  | left_option
+;; S  | left_shift
+;; F  | fn
+;; Q  | right_command
+;; W  | right_control
+;; E  | right_option
+;; R  | right_shift
+;; !! | mandatory command + control + optional + shift (hyper)
+;; ## | optional any
