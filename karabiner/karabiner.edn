@@ -1,4 +1,17 @@
 {:profiles
+;; !  | means mandatory
+;; #  | means optional
+;; C  | left_command
+;; T  | left_control
+;; O  | left_option
+;; S  | left_shift
+;; F  | fn
+;; Q  | right_command
+;; W  | right_control
+;; E  | right_option
+;; R  | right_shift
+;; !! | mandatory command + control + optional + shift (hyper)
+;; ## | optional any
  {:goku {:default true
          :sim     50
          :delay   400
@@ -9,12 +22,13 @@
  :applications {
                 :Emacs ["^org\\.gnu\\.Emacs$"]
                 :Citrix ["^com\\.citrix\\.receiver\\.nomas$"]
+                :Music ["^com\\.apple\\.Music$"]
                 }
 
  :tos {
        :left_paren  {:key :9 :modi [:left_shift] :lazy true}
        :right_paren {:key :0 :modi [:left_shift] :lazy true}
-       :fn_tab      {:key :fn :lazy true}
+       :fn_tilde    {:key :fn :lazy true}
        :r_ctrl      {:key :right_control :lazy true}
        :l_ctrl      {:key :left_control :lazy true}
        :l_cmd       {:key :left_command :lazy true}
@@ -45,19 +59,13 @@
           :spec-mode             {:key :s :condi :tab-mode}
           }
  :simlayers {
- ;; :sim [:right_control :right_option :right_shift :right_command]
- ;;         :simo {:interrupt true
- ;;                :dorder :strict
- ;;                :uorder :strict_inverse
- ;;                :afterup {:set ["SHyper" 1]}}
- ;;                {
              ;; :f-mode {:key :f}
              ;; :o-mode {:key :o}
              ;; :h-mode {:key :h}
              ;; :q-mode {:key :q}
-             :launch-mode {:key :a}
-             ;; :hyper-mode {:key :l_ctrl}
-             ;; :mouse_keys_mode_v4    {:key :d :afterup {:set ["mouse_keys_mode_v4_scroll" 0]}}
+             :app-mode {:key :a}
+             :num-mode {:key :q}
+             :media-mode {:key :w}
              }
  :main [
         ;; remap keys
@@ -69,8 +77,8 @@
          :rules [[:##left_shift :left_shift nil {:alone :left_paren}]]}
         {:des   "right_shift to paranthesis, or right_shift as modifier"
          :rules [[:##right_shift :right_shift nil {:alone :right_paren}]]}
-        ;; {:des   "tab to tab, or fn as modifier"
-        ;;  :rules [[:##tab :fn_tab nil {:alone :tab}]]}
+        {:des   "grave_accent_and_tilde to fn as modifier"
+         :rules [[:##grave_accent_and_tilde :fn_tilde nil {:alone :grave_accent_and_tilde}]]}
         {:des   "left_command to left_option"
          :rules [[:##left_command :left_option]]}
         {:des   "left_option to left_command"
@@ -84,21 +92,58 @@
         {:des   "left_control to shopco"
          :rules [[:##right_option :shopco]]}
 
+
+        ;; numpad mode
+        {:des "Numpad Mode"
+         :rules [:num-mode
+                 [:m :keypad_0]
+                 [:j :keypad_1]
+                 [:k :keypad_2]
+                 [:l :keypad_3]
+                 [:u :keypad_4]
+                 [:i :keypad_5]
+                 [:o :keypad_6]
+                 [:7 :keypad_7]
+                 [:8 :keypad_8]
+                 [:9 :keypad_9]
+                 [:period :keypad_period]
+                 [:slash :keypad_slash]
+                 [:semicolon :keypad_hyphen]
+                 [:p :keypad_plus]
+                 [:0 :keypad_asterisk]
+                 ]}
+
+        ;; media control mode
+        {:des "media controls"
+         :rules [:media-mode
+                 [:m :mute]
+                 [:p :play_or_pause]
+                 [:k :volume_increment]
+                 [:j :volume_decrement]
+                 [:l :fastforward]
+                 [:h :rewind]
+                 ;; [:!Ol :!OCright_arrow :Music]
+                 ;; [:!Oh :!OCleft_arrow :Music]
+                 ]}
+
         ;; app launcher mode
-        {:des "launch mode"
-         :rules [:launch-mode
+        {:des "App Mode - launch apps"
+         :rules [:app-mode
                  [:e [:open "/Applications/Emacs.app"]]
                  [:f [:open "/System/Library/CoreServices/Finder.app"]]
                  [:b [:open "/Applications/firefox.app"]]
                  [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                 [:9 [:open "/Applications/Karabiner-Elements.app"]]
                  [:p [:open "/Applications/PDF Expert.app"]]
                  [:o [:open "/Applications/Microsoft Outlook.app"]]
+                 [:w [:open "/Applications/Microsoft Word.app"]]
                  [:t [:open "/Applications/Alacritty.app"]]
                  [:n [:open "/Applications/Notability.app"]]
                  [:r [:open "/Applications/Zotero.app"]]
                  [:x [:open "/Applications/Microsoft Excel.app"]]
                  [:d [:open "/Applications/Discord.app"]]
                  [:l [:open "/Applications/XMind.app"]]
+                 [:m [:open "/System/Applications/Music.app"]]
                  [:z [:open "/Applications/zoom.us.app"]]
                  ]}
 
@@ -140,10 +185,11 @@
                  [:!Ok {:mkey {:y -1536}}]
                  [:!Oh {:mkey {:x -1536}}]
                  [:!Ol {:mkey {:x 1536}}]
-                 [:!ORj {:mkey {:y 1536 :speed 0.5}}]
-                 [:!ORk {:mkey {:y -1536 :speed 0.5}}]
-                 [:!ORh {:mkey {:x -1536 :speed 0.5}}]
-                 [:!ORl {:mkey {:x 1536 :speed 0.5}}]]}
+                 ;; press down the left pinky to get the shift key
+                 [:!OSj {:mkey {:y 1536 :speed 0.5}}]
+                 [:!OSk {:mkey {:y -1536 :speed 0.5}}]
+                 [:!OSh {:mkey {:x -1536 :speed 0.5}}]
+                 [:!OSl {:mkey {:x 1536 :speed 0.5}}]]}
 
         {:des "Hyper Mode - Mousekey"
          :rules [:!Emacs :hyper-mode
@@ -151,8 +197,8 @@
                  [:up_arrow {:mkey {:y -1536}}]
                  [:left_arrow {:mkey {:x -1536}}]
                  [:right_arrow {:mkey {:x 1536}}]
-                 [:return_or_enter {:pkey :button1}]
-                 [:!Creturn_or_enter {:pkey :button2}]]}
+                 [:!Ou {:pkey :button1}]
+                 [:!Oi {:pkey :button2}]]}
 
         {:des "Hyper Mode - Deletion"
          :rules [:!Emacs :hyper-mode
@@ -193,7 +239,7 @@
                       [:k "~/local/bin/yabai-resize up"]
                       [:l "~/local/bin/yabai-resize right"]
                       :tab-mode
-                      [:grave_accent_and_tilde "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
+                      [:backslash "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
                       ;; focus mode
                       [:h "/usr/local/bin/yabai -m window --focus west"]
                       [:j "/usr/local/bin/yabai -m window --focus south"]
@@ -216,81 +262,7 @@
                       [:x "/usr/local/bin/yabai -m window --close"]
                       [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
                       [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
-                      [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
-        ;; ;; SuperDuper Mode with S+D (Non-QMK)
-        ;; {:des "SuperDuper <- S+D"
-        ;;  :rules [:!qmk [{:sim [:s :d]
-        ;;                  :simo {:interrupt true
-        ;;                         :dorder :insensitive
-        ;;                         :uorder :insensitive
-        ;;                         :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
-        ;; {:des "A+S+D -> SD+Option"
-        ;;  :rules [:!qmk [{:sim [:a :s :d]
-        ;;                  :simo {:interrupt true
-        ;;                         :dorder :insensitive
-        ;;                         :uorder :insensitive
-        ;;                         :afterup {:set ["superduper-mode" 0]}}} [{:set ["superduper-mode" 1]} :left_option]]]}
-        ;; {:des "S+D+F-> SD+Command"
-        ;;  :rules [:!qmk [{:sim [:s :d :f]
-        ;;                  :simo {:interrupt true
-        ;;                         :dorder :insensitive
-        ;;                         :uorder :insensitive
-        ;;                         :afterup {:set ["superduper-mode" 0]}}} [{:set ["superduper-mode" 1]} :l_cmd]]]}
-        ;; {:des "SuperDuper H -> Left" :rules [:superduper-mode [:##h :left_arrow]]}
-        ;; {:des "SuperDuper J -> Down" :rules [:superduper-mode [:##j :down_arrow]]}
-        ;; {:des "SuperDuper K -> Up" :rules [:superduper-mode [:##k :up_arrow]]}
-        ;; {:des "SuperDuper L -> Right" :rules [:superduper-mode [:##l :right_arrow]]}
-        ;; {:des "SuperDuper F -> Command" :rules [:superduper-mode [:##f :left_command]]}
-        ;; {:des "SuperDuper G -> Delete" :rules [:superduper-mode [:##g :delete_or_backspace]]}
-        ;; {:des "SuperDuper ; -> Forward Delete" :rules [:superduper-mode [:##semicolon :delete_forward]]}
-        ;; {:des "SuperDuper U -> First Tab" :rules [:superduper-mode [:##1 :!CSopen_bracket]]}
-        ;; {:des "SuperDuper I -> Prev Tab" :rules [:superduper-mode [:##i :!CSopen_bracket]]}
-        ;; {:des "SuperDuper O -> Next Tab" :rules [:superduper-mode [:##o :!CSclose_bracket]]}
-        ;; {:des "SuperDuper P -> Last Tab" :rules [:superduper-mode [:##9 :!C9]]}
-        ;; {:des "SuperDuper A -> Option" :rules [:superduper-mode [:##a :left_option]]}
-        ;; {:des "SuperDuper V -> Shift" :rules [:superduper-mode [:##v :left_shift]]}
-        ;; {:des "SuperDuper Z -> Undo" :rules [:superduper-mode [:##z :!Cz]]}
-        ;; {:des "SuperDuper B -> PageUp" :rules [:superduper-mode [:##b :page_up]]}
-        ;; {:des "SuperDuper N -> PageDown" :rules [:superduper-mode [:##n :page_down]]}
-
-        ;; Z for Dev Mode
-        ;; ,-----------------------------------------------------------------------------------.
-        ;; |                                         |      |   -  |   +  |   (  |   )  |      |
-        ;; |------+------+------+------+------+-------------+------+------+------+------+------|
-        ;; |                   N/A                   |   _  |   [  |   ]  |   {  |   }  |      |
-        ;; |------+------+------+------+------+------|------+------+------+------+------+------|
-        ;; |                                         |   =  |   |  |   <  |   >  |   ?  |      |
-        ;; |------+------+------+------+------+------+------+------+------+------+------+------
-        ;; {:des "Q Dev Mode" :rules [:q-mode
-        ;;                           [:u :hyphen]
-        ;;                           [:i :!Sequal_sign] ; +
-        ;;                           [:o :!S9] ; (
-        ;;                           [:p :!S0] ; )
-        ;;                           [:h :!Shyphen] ; _
-        ;;                           [:j :open_bracket]
-        ;;                           [:k :close_bracket]
-        ;;                           [:l :!Sopen_bracket] ; {
-        ;;                           [:semicolon :!Sclose_bracket] ; }
-        ;;                           [:n :equal_sign]
-        ;;                           [:m :!Sbackslash] ; |
-        ;;                           [:comma :!Scomma] ; <
-        ;;                           [:period :!Speriod] ; >
-        ;;                           [:slash :!Sslash] ; ?
-        ;;                           ]}
-
-                                        ; ThumbSense (rev 3) https://pqrs.org/osx/karabiner/complex_modifications/#thumbsense
-        ;; {:des "ThumbSense Mode" :rules [[:c :!Cc ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:v :!Cv ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:f {:pkey :button1} ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:j {:pkey :button1} ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:spacebar {:pkey :button1} ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:d {:pkey :button2} ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:k {:pkey :button2} ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:g :!Copen_bracket ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:h :!Cclose_bracket ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 [:w :!Cw ["multitouch_extension_finger_count_total" 1]]
-        ;;                                 ]}
-        ]
+                      [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}]
  ;; code won't read cheatsheet section
  ;; ! stand for mandatory
  ;; # stand for optional
@@ -312,16 +284,3 @@
                                       {:des "Caps vim navigation" :rules [:caps-lock-mode [:h :left_arrow] [:j :down_arrow] [:k :up_arrow] [:l :right_arrow]]}
                                       ]
               }}
-;; !  | means mandatory
-;; #  | means optional
-;; C  | left_command
-;; T  | left_control
-;; O  | left_option
-;; S  | left_shift
-;; F  | fn
-;; Q  | right_command
-;; W  | right_control
-;; E  | right_option
-;; R  | right_shift
-;; !! | mandatory command + control + optional + shift (hyper)
-;; ## | optional any
