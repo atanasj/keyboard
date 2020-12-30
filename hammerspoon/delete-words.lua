@@ -2,12 +2,12 @@ local log = hs.logger.new('delete-words.lua', 'debug')
 
 local isInTerminal = function()
    app = hs.application.frontmostApplication():name()
-   return app == 'iTerm2' or app == 'Terminal'
+   return app == 'iTerm2' or app == 'Terminal' 
 end
 
 local isInEmacs = function()
    app = hs.application.frontmostApplication():name()
-   return app == 'Emacs'
+   return app == 'Emacs' or app == 'Alacritty'
 end
 
 

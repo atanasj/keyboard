@@ -14,61 +14,87 @@
 ;; ## | optional any
  {:goku {:default true
          :sim     50
-         :delay   400
-         :alone   400
-         :held    400}
+         :delay   500                   ; NOTE may want to increase these value
+         :alone   500
+         :held    500}
   }
 
  :applications {
                 :Emacs ["^org\\.gnu\\.Emacs$"]
                 :Citrix ["^com\\.citrix\\.receiver\\.nomas$"]
-                :Music ["^com\\.apple\\.Music$"]
+                :term ["^io\\.alacritty$"]
+                :mail ["^com\\.microsoft\\.Outlook$"]
+                :browser ["^org\\.mozilla\\.firefox$"
+                          "^com\\.readdle\\.PDFExpert-Mac$"
+                          ]
+                :excel ["^com\\.microsoft\\.Excel$"]
+                :notability ["^com\\.gingerlabs\\.NotabilityMac$"]
                 }
 
  :tos {
        :left_paren  {:key :9 :modi [:left_shift] :lazy true}
        :right_paren {:key :0 :modi [:left_shift] :lazy true}
-       :fn_tilde    {:key :fn :lazy true}
-       :r_ctrl      {:key :right_control :lazy true}
-       :l_ctrl      {:key :left_control :lazy true}
-       :l_cmd       {:key :left_command :lazy true}
-       :shyper      {:key :right_command :modi [:right_option :right_shift :right_control]}
-       :hyper       {:key :right_command :modi [:right_option :right_control]}
-       :super       {:key :right_shift :modi [:right_command :right_control]}
-       :shopco      {:key :right_shift :modi [:right_option :right_control]}
+       :fn_tilde    {:key :##fn :lazy true}
+       :tab         {:key :##tab :lazy true}
+       :r_ctrl      {:key :##right_control :lazy true}
+       :l_ctrl      {:key :##left_control :lazy true}
+       :l_cmd       {:key :##left_command :lazy true}
+       :shyper      {:key :right_command :modi [:right_option :right_shift :right_control] :lazy true}
+       :hyper       {:key :right_command :modi [:right_option :right_control] :lazy true}
+       :super       {:key :right_shift :modi [:right_command :right_control] :lazy true}
+       :shopco      {:key :right_shift :modi [:right_option :right_control] :lazy true}
        }
 
  :templates {
              :open "open \"%s\""
-             :alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"\"'"
+             :alfred "osascript -e 'tell application \"com.runningwithcrayons.Alfred\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             ;; :sh "/usr/local/bin/zsh \"s\""
              }
 
  ;; layers are...
  :layers {
           ;; NOTE for this setting to work need to remap caps_lock to control
           ;; key in settings
-          :hyper-mode {:key :caps_lock :alone {:key :escape} :condi :!Emacs}
-          :tab-mode              {:key     :tab
-                                  :afterup [{:set ["yabai-move-mode" 0]}
-                                            {:set ["yabai-scale-mode" 0]}
-                                            {:set ["spec-mode" 0]}]
-                                  :condi   [:!comma-mode :!period-mode]}
-          :yabai-move-mode       {:key :f :condi :tab-mode}
-          :yabai-scale-mode      {:key :c :condi :tab-mode}
-          :spec-mode             {:key :s :condi :tab-mode}
+          :fkey-mode           {:key :grave_accent_and_tilde
+                                 :alone {:key :grave_accent_and_tilde}
+                                 :condi :!Emacs
+                                 }
+          :hyper-mode           {:key :caps_lock
+                                 :alone {:key :escape}
+                                 :condi :!Emacs
+                                 }
+          :hyper-moder          {:key :return_or_enter
+                                 :alone {:key :return_or_enter}
+                                 :condi :!Emacs
+                                 }
+          :tab-mode             {:key     :tab
+                                 :afterup [{:set ["window-mode" 0]}
+                                           ;; {:set ["yabai-scale-mode" 0]}
+                                           ;; {:set ["yabai-move-mode" 0]}
+                                           ;; {:set ["spec-mode" 0]}
+                                           ]
+                                 ;; :condi   [:!comma-mode :!period-mode]
+                                 }
+          ;; :yabai-move-mode      {:key :f :condi :tab-mode}
+          ;; :yabai-scale-mode     {:key :c :condi :tab-mode}
+          ;; :spec-mode            {:key :s :condi :tab-mode}
+          :hyper-mouse          {:key :d :condi :tab-mode}
+          :hyper-scroll         {:key :f :condi :tab-mode}
+          :window-mode          {:key :w :condi :tab-mode}
           }
+
  :simlayers {
-             ;; :f-mode {:key :f}
-             ;; :o-mode {:key :o}
-             ;; :h-mode {:key :h}
-             ;; :q-mode {:key :q}
-             :app-mode {:key :a}
-             :num-mode {:key :q}
-             :media-mode {:key :w}
+             :f-mode            {:key :f}     ; function
+             :app-mode          {:key :q}
+             :num-mode          {:key :e}
+             :media-mode        {:key :r}
+             :mouse-mode        {:key :d
+                                 :afterup {:set ["mouse-scroll-mode" 0]}}
              }
+
  :main [
-        ;; remap keys
+        ;; remap keys, more simple changes
         {:des   "caps_lock to esc, to ctrl as modifier"
          :rules [[:##caps_lock :l_ctrl nil {:alone :escape}]]}
         {:des   "return_enter to return_enter, to ctrl as modifier"
@@ -83,15 +109,63 @@
          :rules [[:##left_command :left_option]]}
         {:des   "left_option to left_command"
          :rules [[:##left_option :left_command]]}
+
+        ;; more complex key settings
         {:des   "SHyper"
          :rules [[:##left_control :shyper]]}
         {:des   "Hyper"
          :rules [[:##right_command :hyper]]}
         {:des   "fn to Super"
-         :rules [[:##fn :super]]}
-        {:des   "left_control to shopco"
+         :rules [[:##fn :super :nil {:alone :fn}]]}
+        {:des   "right_option to shopco"
          :rules [[:##right_option :shopco]]}
 
+        {:des   "send l_ctrl+l in alacritty"
+         :rules [:term [:!Cl :!Tl]]}
+
+        {:des   "navigate mail"
+         :rules [:mail :f-mode
+                 [:h [:km "outlook: prevpane"]]
+                 [:l [:km "outlook: nextpane"]]
+                 [:k [:km "outlook: sidebar"]]
+                 ]}
+
+        {:des   "change firefox settings"
+         :rules [:browser
+                 [:!Ch :!Cleft_arrow]
+                 [:!Cl :!Cright_arrow]
+                 ]}
+
+        {:des   "Press f9 twice to enter num-mode, press f9 once to leave it"
+         :rules [[:f9 ["num-mode" 1] ["f9-pressesd-once" 1]]
+                 [:f9 [:f9 ["f9-pressesd-once" 1]] ["num-mode" 0] {:delayed {:invoked ["f9-pressesd-once" 0] :canceled ["f9-pressesd-once" 0]}}]
+                 :num-mode
+                 [:f9 ["num-mode" 0]]
+                 ]}
+
+        {:des   "Press fn twice to enter hyper-mode, press fn once to leave it"
+         :rules [[:fn ["hyper-mode" 1] ["fn-pressesd-once" 1]]
+                 [:fn [:fn ["fn-pressesd-once" 1]] ["hyper-mode" 0] {:delayed {:invoked ["fn-pressesd-once" 0] :canceled ["fn-pressesd-once" 0]}}]
+                 :hyper-mode
+                 [:fn ["hyper-mode" 0]]
+                 ]}
+
+        ;; tilde mode
+        {:des "grave_accent_and_tilde to map number row to function keys"
+         :rules[:fkey-mode
+                [:1 :f1]
+                [:2 :f2]
+                [:3 :f3]
+                [:4 :f4]
+                [:5 :f5]
+                [:6 :f6]
+                [:7 :f7]
+                [:8 :f8]
+                [:9 :f9]
+                [:0 :f10]
+                [:hyphen :f11]
+                [:equal_sign :f12]
+                ]}
 
         ;; numpad mode
         {:des "Numpad Mode"
@@ -122,147 +196,226 @@
                  [:j :volume_decrement]
                  [:l :fastforward]
                  [:h :rewind]
-                 ;; [:!Ol :!OCright_arrow :Music]
-                 ;; [:!Oh :!OCleft_arrow :Music]
                  ]}
 
         ;; app launcher mode
-        {:des "App Mode - launch apps"
-         :rules [:app-mode
-                 [:e [:open "/Applications/Emacs.app"]]
-                 [:f [:open "/System/Library/CoreServices/Finder.app"]]
-                 [:b [:open "/Applications/firefox.app"]]
-                 [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
-                 [:9 [:open "/Applications/Karabiner-Elements.app"]]
-                 [:p [:open "/Applications/PDF Expert.app"]]
-                 [:o [:open "/Applications/Microsoft Outlook.app"]]
-                 [:w [:open "/Applications/Microsoft Word.app"]]
-                 [:t [:open "/Applications/Alacritty.app"]]
-                 [:n [:open "/Applications/Notability.app"]]
-                 [:r [:open "/Applications/Zotero.app"]]
-                 [:x [:open "/Applications/Microsoft Excel.app"]]
-                 [:d [:open "/Applications/Discord.app"]]
-                 [:l [:open "/Applications/XMind.app"]]
-                 [:m [:open "/System/Applications/Music.app"]]
-                 [:z [:open "/Applications/zoom.us.app"]]
+        {:des "App Mode - launch apps 2"
+         :rules [
+                 ;; left side
+                 [:!QWEw [:open "/Applications/Microsoft Word.app"]]
+                 [:!QWEe [:open "/Applications/Emacs.app"]]
+                 [:!QWEr [:open "/Applications/Zotero.app"]]
+                 [:!QWEt [:open "/Applications/Alacritty.app"]]
+                 [:!QWEd [:open "/Applications/Discord.app"]]
+                 [:!QWEf [:open "/System/Library/CoreServices/Finder.app"]]
+                 [:!QWEz [:open "/Applications/zoom.us.app"]]
+                 [:!QWEb [:open "/Applications/firefox.app"]]
+                 ;; !QWEright side
+                 [:!QWE8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                 [:!QWE9 [:open "/Applications/Karabiner-Elements.app"]]
+                 [:!QWE0 [:open "/Applications/Keyboard Maestro.app"]]
+                 [:!QWEi [:open "/Applications/Microsoft Excel.app"]]
+                 [:!QWEo [:open "/Applications/Microsoft Outlook.app"]]
+                 [:!QWEp [:open "/Applications/PDF Expert.app"]]
+                 [:!QWEn [:open "/Applications/Notability.app"]]
+                 [:!QWEm [:open "/System/Applications/Music.app"]]
+                 [:!QWEl [:open "/Applications/XMind.app"]]
+                 [:!QWEbackslash [:open "/System/Applications/Messages.app"]]
                  ]}
 
-        {:des "Hyper Mode - Control"
-         :rules [:!Emacs :hyper-mode
+        {:des "App Mode - launch apps"
+         :rules [:app-mode
+                 ;; left side
+                 [:w [:open "/Applications/Microsoft Word.app"]]
+                 [:e [:open "/Applications/Emacs.app"]]
+                 [:r [:open "/Applications/Zotero.app"]]
+                 [:t [:open "/Applications/Alacritty.app"]]
+                 [:d [:open "/Applications/Discord.app"]]
+                 [:f [:open "/System/Library/CoreServices/Finder.app"]]
+                 [:z [:open "/Applications/zoom.us.app"]]
+                 [:b [:open "/Applications/firefox.app"]]
+                 ;; right side
+                 [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                 [:9 [:open "/Applications/Karabiner-Elements.app"]]
+                 [:0 [:open "/Applications/Keyboard Maestro.app"]]
+                 [:i [:open "/Applications/Microsoft Excel.app"]]
+                 [:o [:open "/Applications/Microsoft Outlook.app"]]
+                 [:p [:open "/Applications/PDF Expert.app"]]
+                 [:n [:open "/Applications/Notability.app"]]
+                 [:m [:open "/System/Applications/Music.app"]]
+                 [:l [:open "/Applications/XMind.app"]]
+                 [:backslash [:open "/System/Applications/Messages.app"]]
+                 ]}
+
+        {:des "Hyper Moder - Control"
+         :rules [:!Emacs :hyper-moder
+                 ;; make copy and pasting more ergonomic
                  [:a :!Ta]
-                 [:c :!Tc]
                  [:d :!Td]
                  [:z :!Tz]
-                 [:!Rz :!RCz]
+                 [:!Sz :!SCz]
+                 [:x :!Cx]
+                 [:c :!Tc]
                  [:v :!Cv]
+                 ;; keep control key working
+                 [:q :!Wq]
+                 [:w :!Ww :term]
+                 [:w :!Cw :!term]
+                 [:e :!We]
+                 [:r :!Wr]
+                 [:t :!Wt]
+                 [:r :!Wr]
+                 [:s :!Ws]
+                 [:f :!Wf]
+                 [:g :!Wg :term]
+                 [:b :!Wb :term]
                  ]}
+
+        ;; {:des "Hyper Mode - Control"
+        ;;  :rules [:!Emacs :hyper-mode
+        ;;          [:a :!Ta]              ; select all
+        ;;          [:c :!Tc]              ; copy
+        ;;          [:d :!Td]              ; delete
+        ;;          [:z :!Tz]              ; undo
+        ;;          [:!Rz :!RCz]           ; redo
+        ;;          [:v :!Cv]              ; paste
+        ;;          [:x :!Cx]              ; cut
+        ;;          ]}
 
         {:des "Hyper Mode - Navigation [VI style]"
          :rules [:!Emacs :hyper-mode
-                 [:j :down_arrow]
-                 [:k :up_arrow]
-                 [:h :left_arrow]
-                 [:l :right_arrow]
-                 [:b :!Oleft_arrow]
-                 [:w :!Oright_arrow]
-                 [:y :home]
-                 [:u :page_up]
-                 [:i :page_down]
-                 [:o :end]
-                 [:!Cj :!Sdown_arrow]
-                 [:!Ck :!Sup_arrow]
-                 [:!Ch :!Sleft_arrow]
-                 [:!Cl :!Sright_arrow]
-                 [:!Cb :!SOleft_arrow]
-                 [:!Cw :!SOright_arrow]
-                 [:!Cu :!Shome]
-                 [:!Ci :!Send]
-                 [:!OWj {:mkey {:vwheel 32}}]
-                 [:!OWk {:mkey {:vwheel -32}}]
-                 [:!OWh {:mkey {:hwheel 32}}]
-                 [:!OWl {:mkey {:hwheel -32}}]
-                 [:!Oj {:mkey {:y 1536}}]
-                 [:!Ok {:mkey {:y -1536}}]
-                 [:!Oh {:mkey {:x -1536}}]
-                 [:!Ol {:mkey {:x 1536}}]
-                 ;; press down the left pinky to get the shift key
-                 [:!OSj {:mkey {:y 1536 :speed 0.5}}]
-                 [:!OSk {:mkey {:y -1536 :speed 0.5}}]
-                 [:!OSh {:mkey {:x -1536 :speed 0.5}}]
-                 [:!OSl {:mkey {:x 1536 :speed 0.5}}]]}
+                 ;; modifiers
+                 [:##s :left_shift]
+                 [:##a :left_option]
+                 [:##d :left_command]
+                 ;; movement
+                 [:##j :down_arrow]
+                 [:##k :up_arrow]
+                 [:##h :left_arrow]
+                 [:##l :right_arrow]
+                 [:##b :!Oleft_arrow]
+                 [:##w :!Oright_arrow]
+                 ;; navigation between tabs
+                 [:u :!CSopen_bracket :browser]
+                 [:i :!CSclose_bracket :browser]
+                 ;; page navigation
+                 [:##y :home]
+                 [:##u :page_up :!browser]
+                 [:##i :page_down :!browser]
+                 [:##o :end]
+                 ]}
 
-        {:des "Hyper Mode - Mousekey"
-         :rules [:!Emacs :hyper-mode
-                 [:down_arrow {:mkey {:y 1536}}]
-                 [:up_arrow {:mkey {:y -1536}}]
-                 [:left_arrow {:mkey {:x -1536}}]
-                 [:right_arrow {:mkey {:x 1536}}]
-                 [:!Ou {:pkey :button1}]
-                 [:!Oi {:pkey :button2}]]}
+        {:des "Hyper Mode - Navigation [VI style]"
+         :rules [:!Emacs :hyper-moder
+                 [:##b :!Oleft_arrow :!term]
+                 [:##w :!Oright_arrow :!term]
+                 ]}
 
         {:des "Hyper Mode - Deletion"
          :rules [:!Emacs :hyper-mode
-                 [:n :!Odelete_or_backspace]
-                 [:m :delete_or_backspace]
-                 [:comma :delete_forward]
-                 [:period :!Odelete_forward]
-                 [:!Cn :!Cdelete_or_backspace]
-                 [:!Cm :!Cdelete_or_backspace]
-                 [:!Ccomma :!Cdelete_forward]
-                 [:!Cperiod :!Cdelete_forward]]}
+                 [:##s :left_shift]
+                 [:##n :!Odelete_or_backspace]
+                 [:##m :delete_or_backspace]
+                 [:##comma :delete_forward]
+                 [:##period :!Odelete_forward]
+                 [:slash [:!CSleft_arrow :delete_or_backspace]]
+                 [:!Sslash [:!CSright_arrow :delete_or_backspace]]
+                 ]}
+
+        {:des   "Mouse Keys Mode v4 (rev 1)"
+         :rules [[:##j {:mkey {:vwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 [:##h {:mkey {:hwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 [:##k {:mkey {:vwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 [:##l {:mkey {:hwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 :mouse-mode
+                 [:##j {:mkey {:y 2700}}]
+                 [:##k {:mkey {:y -2700}}]
+                 [:##h {:mkey {:x -2700}}]
+                 [:##l {:mkey {:x 2700}}]
+                 [:##v {:pkey :button1}]
+                 [:##b {:pkey :button3}]
+                 [:##n {:pkey :button2}]
+                 [:##f ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
+                 [:##i [:km "mouse: centre"]]
+                 [:##s {:mkey {:speed 0.5}}]]}
+
+        {:des "Window Mode - Move and Resize Windows"
+         :rules [:window-mode
+                 [:h [:km "rectangle: left"]]
+                 [:l [:km "rectangle: right"]]
+                 [:k [:km "rectangle: top"]]
+                 [:j [:km "rectangle: bottom"]]
+                 [:m [:km "rectangle: full"]]
+                 [:i [:km "rectangle: next"]]
+                 [:u [:km "rectangle: prev"]]
+                 [:n [:km "rectangle: winclose"]]
+                 [:b [:km "rectangle: kill"]]
+                 [:y :!CSgrave_accent_and_tilde]
+                 [:p :!Cgrave_accent_and_tilde]
+                 ;; [:open_bracket [:!Ctab :!CS]]
+                 [:close_bracket :!Ctab]
+                 ]
+         }
+
+        {:des "tab-mode"
+         :rules[:tab-mode
+                [:h "echo \"h key from tab-mode\""]]
+         }
 
         ;; {
         ;;  :des "Hyper Mode - Misc"
         ;;  :rules [:!Emacs :hyper-mode
-        ;;          [:escape :caps_lock]
+        ;;          [:= :caps_lock]
         ;;          [:grave_accent_and_tilde :!CS5]]
         ;;  }
 
-         {:des   "yabai mode"
-              :rules [
-                      ;; :yabai-insert-mode
-                      ;; [:h "/usr/local/bin/yabai -m window --insert west"]
-                      ;; [:j "/usr/local/bin/yabai -m window --insert south"]
-                      ;; [:k "/usr/local/bin/yabai -m window --insert north"]
-                      ;; [:l "/usr/local/bin/yabai -m window --insert east"]
+        ;; {:des   "yabai mode"
+        ;;      :rules [
+        ;;              ;; :yabai-insert-mode
+        ;;              ;; [:h "/usr/local/bin/yabai -m window --insert west"]
+        ;;              ;; [:j "/usr/local/bin/yabai -m window --insert south"]
+        ;;              ;; [:k "/usr/local/bin/yabai -m window --insert north"]
+        ;;              ;; [:l "/usr/local/bin/yabai -m window --insert east"]
 
-                      ;; move windows
-                      :yabai-move-mode
-                      [:h "/usr/local/bin/yabai -m window --warp west"]
-                      [:j "/usr/local/bin/yabai -m window --warp south"]
-                      [:k "/usr/local/bin/yabai -m window --warp north"]
-                      [:l "/usr/local/bin/yabai -m window --warp east"]
-                      ;; scale windows
-                      :yabai-scale-mode
-                      [:h "~/local/bin/yabai-resize left"]
-                      [:j "~/local/bin/yabai-resize down"]
-                      [:k "~/local/bin/yabai-resize up"]
-                      [:l "~/local/bin/yabai-resize right"]
-                      :tab-mode
-                      [:backslash "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
-                      ;; focus mode
-                      [:h "/usr/local/bin/yabai -m window --focus west"]
-                      [:j "/usr/local/bin/yabai -m window --focus south"]
-                      [:k "/usr/local/bin/yabai -m window --focus north"]
-                      [:l "/usr/local/bin/yabai -m window --focus east"]
-                      [:n "/usr/local/bin/yabai -m window --focus next"]
-                      [:p "/usr/local/bin/yabai -m window --focus prev"]
+        ;;              ;; move windows
+        ;;              :yabai-move-mode
+        ;;              [:h "/usr/local/bin/yabai -m window --warp west"]
+        ;;              [:j "/usr/local/bin/yabai -m window --warp south"]
+        ;;              [:k "/usr/local/bin/yabai -m window --warp north"]
+        ;;              [:l "/usr/local/bin/yabai -m window --warp east"]
+        ;;              ;; scale windows
+        ;;              :yabai-scale-mode
+        ;;              [:h "~/local/bin/yabai-resize left"]
+        ;;              [:j "~/local/bin/yabai-resize down"]
+        ;;              [:k "~/local/bin/yabai-resize up"]
+        ;;              [:l "~/local/bin/yabai-resize right"]
+        ;;              :tab-mode
+        ;;              [:backslash "launchctl kickstart -k \"gui/${UID}/homebrew.mxcl.yabai\""]
+        ;;              ;; focus mode
+        ;;              [:h "/usr/local/bin/yabai -m window --focus west"]
+        ;;              [:j "/usr/local/bin/yabai -m window --focus south"]
+        ;;              [:k "/usr/local/bin/yabai -m window --focus north"]
+        ;;              [:l "/usr/local/bin/yabai -m window --focus east"]
+        ;;              [:n "/usr/local/bin/yabai -m window --focus next"]
+        ;;              [:p "/usr/local/bin/yabai -m window --focus prev"]
 
-                      ;; yabai workspace
-                      ;; [:1 "/usr/local/bin/yabai -m space --focus 1"]
-                      ;; [:2 "/usr/local/bin/yabai -m space --focus 2"]
-                      ;; [:3 "/usr/local/bin/yabai -m space --focus 3"]
-                      ;; [:4 "/usr/local/bin/yabai -m space --focus 4"]
-                      [:a "/usr/local/bin/yabai -m window --toggle float"]
-                      ;; [:0 "/usr/local/bin/yabai -m window --toggle sticky"]
-                      [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
-                      [:spacebar "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
-                      [:b "/usr/local/bin/yabai -m window --layout bsp"]
-                      [:m "/usr/local/bin/yabai -m window --toggle zoom-parent"]
-                      [:x "/usr/local/bin/yabai -m window --close"]
-                      [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
-                      [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
-                      [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}]
+        ;;              ;; yabai workspace
+        ;;              ;; [:1 "/usr/local/bin/yabai -m space --focus 1"]
+        ;;              ;; [:2 "/usr/local/bin/yabai -m space --focus 2"]
+        ;;              ;; [:3 "/usr/local/bin/yabai -m space --focus 3"]
+        ;;              ;; [:4 "/usr/local/bin/yabai -m space --focus 4"]
+        ;;              [:a "/usr/local/bin/yabai -m window --toggle float"]
+        ;;              ;; [:0 "/usr/local/bin/yabai -m window --toggle sticky"]
+        ;;              [:0 "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+        ;;              [:spacebar "/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]
+        ;;              [:b "/usr/local/bin/yabai -m window --layout bsp"]
+        ;;              [:m "/usr/local/bin/yabai -m window --toggle zoom-parent"]
+        ;;              [:x "/usr/local/bin/yabai -m window --close"]
+        ;;              [:delete_or_backspace "/usr/local/bin/yabai -m window --close"]
+        ;;              [:open_bracket "/usr/local/bin/yabai -m window --space prev"]
+        ;;              [:close_bracket "/usr/local/bin/yabai -m window --space next"]]}
+        ]
+
  ;; code won't read cheatsheet section
  ;; ! stand for mandatory
  ;; # stand for optional

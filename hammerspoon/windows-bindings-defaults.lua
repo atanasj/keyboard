@@ -27,7 +27,7 @@
 return {
   modifiers = {'ctrl'},
   showHelp  = false,
-  trigger   = 'f20',
+  trigger   = 'tab',
   mappings  = {
     { {},         'return', 'maximize' },
     { {},         'space',  'centerWithFullHeight' },
