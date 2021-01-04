@@ -85,7 +85,7 @@
           }
 
  :simlayers {
-             :f-mode            {:key :f}     ; function
+             :g-mode            {:key :g}     ; function
              :app-mode          {:key :q}
              :num-mode          {:key :z}
              :window-mode       {:key :w}
@@ -128,12 +128,12 @@
          :rules [:term [:!Cl :!Tl]]}
 
         {:des   "launch alfred"
-         :rules [:f-mode
+         :rules [:g-mode
                  [:spacebar :!Ospacebar]
                  ]}
 
         {:des   "navigate mail"
-         :rules [:mail :f-mode
+         :rules [:mail :g-mode
                  [:h [:km "outlook: prevpane"]]
                  [:l [:km "outlook: nextpane"]]
                  [:k [:km "outlook: sidebar"]]
@@ -207,42 +207,14 @@
                  [:h :rewind]
                  ]}
 
-        ;; app launcher mode
-        {:des "App Mode - launch apps 2"
-         :rules [
-                 ;; left side
-                 [:!QWEw [:open "/Applications/Microsoft Word.app"]]
-                 [:!QWEe [:open "/Applications/Emacs.app"]]
-                 [:!QWEr [:open "/Applications/Zotero.app"]]
-                 [:!QWEt [:open "/Applications/Alacritty.app"]]
-                 [:!QWEd [:open "/Applications/Discord.app"]]
-                 [:!QWEf [:open "/System/Library/CoreServices/Finder.app"]]
-                 [:!QWEz [:open "/Applications/zoom.us.app"]]
-                 [:!QWEb [:open "/Applications/firefox.app"]]
-                 ;; !QWEright side
-                 [:!QWE8 [:open "/Applications/Karabiner-EventViewer.app"]]
-                 [:!QWE9 [:open "/Applications/Karabiner-Elements.app"]]
-                 [:!QWE0 [:open "/Applications/Keyboard Maestro.app"]]
-                 [:!QWEi [:open "/Applications/Microsoft Excel.app"]]
-                 [:!QWEo [:open "/Applications/Microsoft Outlook.app"]]
-                 [:!QWEp [:open "/Applications/PDF Expert.app"]]
-                 [:!QWEn [:open "/Applications/Notability.app"]]
-                 [:!QWEm [:open "/System/Applications/Music.app"]]
-                 [:!QWEl [:open "/Applications/XMind.app"]]
-                 [:!QWEbackslash [:open "/System/Applications/Messages.app"]]
-                 ]}
-
         {:des "App Mode - launch apps"
          :rules [:app-mode
                  ;; left side
                  [:w [:open "/Applications/Microsoft Word.app"]]
-                 [:e [:open "/Applications/Emacs.app"]]
                  [:r [:open "/Applications/Zotero.app"]]
-                 [:t [:open "/Applications/Alacritty.app"]]
                  [:d [:open "/Applications/Discord.app"]]
                  [:f [:open "/System/Library/CoreServices/Finder.app"]]
                  [:z [:open "/Applications/zoom.us.app"]]
-                 [:b [:open "/Applications/firefox.app"]]
                  ;; right side
                  [:8 [:open "/Applications/Karabiner-EventViewer.app"]]
                  [:9 [:open "/Applications/Karabiner-Elements.app"]]
@@ -250,10 +222,13 @@
                  [:i [:open "/Applications/Microsoft Excel.app"]]
                  [:o [:open "/Applications/Microsoft Outlook.app"]]
                  [:p [:open "/Applications/PDF Expert.app"]]
+                 [:backslash [:open "/System/Applications/Messages.app"]]
+                 [:h [:open "/Applications/Alacritty.app"]]
+                 [:j [:open "/Applications/Emacs.app"]]
+                 [:l [:open "/Applications/XMind.app"]]
+                 [:b [:open "/Applications/firefox.app"]]
                  [:n [:open "/Applications/Notability.app"]]
                  [:m [:open "/System/Applications/Music.app"]]
-                 [:l [:open "/Applications/XMind.app"]]
-                 [:backslash [:open "/System/Applications/Messages.app"]]
                  ]}
 
         {:des "Hyper Moder - Control"
@@ -279,23 +254,6 @@
                  [:g :!Wg :term]
                  [:b :!Wb :term]
                  ]}
-
-        ;; {:des "Hyper Mode - Control"
-        ;;  :rules [:!Emacs :hyper-mode
-        ;;          [:a :!Ta]              ; select all
-        ;;          [:c :!Tc]              ; copy
-        ;;          [:d :!Td]              ; delete
-        ;;          [:z :!Tz]              ; undo
-        ;;          [:!Rz :!RCz]           ; redo
-        ;;          [:v :!Cv]              ; paste
-        ;;          [:x :!Cx]              ; cut
-        ;;          ]}
-        ;; {:des "SuperDuper <- S+D"
-        ;;  :rules [:!qmk [{:sim [:s :d]
-        ;;                  :simo {:interrupt true
-        ;;                         :dorder :insensitive
-        ;;                         :uorder :insensitive
-        ;;                         :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
 
         {:des "SuperDuper Mode - Navigation [VI style]"
          :rules [:superduper-mode
@@ -328,52 +286,17 @@
                  [:##n :!Odelete_or_backspace]
                  [:##m :delete_or_backspace]
                  [:##comma :delete_forward]
-                 [:##period :!Odelete_forward]
+                 [:##period :!Odelete_forward :!Emacs]
+                 [:##period :!Od :Emacs]
                  [:slash [:!CSleft_arrow :delete_or_backspace]]
                  [:!Sslash [:!CSright_arrow :delete_or_backspace]]
                  ]}
-
-        ;; {:des "Hyper Mode - Navigation [VI style]"
-        ;;  :rules [:!Emacs :hyper-mode
-        ;;          ;; modifiers
-        ;;          [:##s :left_shift]
-        ;;          [:##a :left_option]
-        ;;          [:##d :left_command]
-        ;;          ;; movement
-        ;;          [:##j :down_arrow]
-        ;;          [:##k :up_arrow]
-        ;;          [:##h :left_arrow]
-        ;;          [:##l :right_arrow]
-        ;;          [:##b :!Oleft_arrow]
-        ;;          [:##w :!Oright_arrow]
-        ;;          ;; navigation between tabs
-        ;;          [:!Su :!CSopen_bracket :!excel]
-        ;;          [:!Su :!Oleft_arrow :excel]
-        ;;          [:!Si :!CSclose_bracket :!excel]
-        ;;          [:!Si :!Oright_arrow :excel]
-        ;;          ;; page navigation
-        ;;          [:##y :home]
-        ;;          [:u :page_up]
-        ;;          [:i :page_down]
-        ;;          [:##o :end]
-        ;;          ]}
 
         {:des "Hyper Mode - Navigation [VI style]"
          :rules [:!Emacs :hyper-moder
                  [:##b :!Oleft_arrow :!term]
                  [:##w :!Oright_arrow :!term]
                  ]}
-
-        ;; {:des "Hyper Mode - Deletion"
-        ;;  :rules [:!Emacs :hyper-mode
-        ;;          [:##s :left_shift]
-        ;;          [:##n :!Odelete_or_backspace]
-        ;;          [:##m :delete_or_backspace]
-        ;;          [:##comma :delete_forward]
-        ;;          [:##period :!Odelete_forward]
-        ;;          [:slash [:!CSleft_arrow :delete_or_backspace]]
-        ;;          [:!Sslash [:!CSright_arrow :delete_or_backspace]]
-        ;;          ]}
 
         {:des   "Mouse Keys Mode v4 (rev 1)"
          :rules [[:##j {:mkey {:vwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
@@ -385,10 +308,10 @@
                  [:##k {:mkey {:y -1200}}]
                  [:##h {:mkey {:x -1200}}]
                  [:##l {:mkey {:x 1200}}]
-                 [:##v {:pkey :button1}]
+                 [:##spacebar {:pkey :button1}]
                  ;; [:##b {:pkey :button3}]
-                 [:##b :!CTd]           ; get three finger lookup
-                 [:##n {:pkey :button2}]
+                 [:##v :!CTd]           ; get three finger lookup
+                 [:##f {:pkey :button2}]
                  [:##t ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
                  [:##i [:km "mouse: centre"]]
                  [:##r {:mkey {:speed 2}}]
