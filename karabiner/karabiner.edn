@@ -60,10 +60,10 @@
                                  :alone {:key :grave_accent_and_tilde}
                                  :condi :!Emacs
                                  }
-          :hyper-mode           {:key :caps_lock
-                                 :alone {:key :escape}
-                                 :condi :!Emacs
-                                 }
+          ;; :hyper-mode           {:key :caps_lock
+          ;;                        :alone {:key :escape}
+          ;;                        :condi :!Emacs
+          ;;                        }
           :hyper-moder          {:key :return_or_enter
                                  :alone {:key :return_or_enter}
                                  :condi :!Emacs
@@ -79,18 +79,20 @@
           ;; :yabai-move-mode      {:key :f :condi :tab-mode}
           ;; :yabai-scale-mode     {:key :c :condi :tab-mode}
           ;; :spec-mode            {:key :s :condi :tab-mode}
-          :hyper-mouse          {:key :d :condi :tab-mode}
-          :hyper-scroll         {:key :f :condi :tab-mode}
-          :window-mode          {:key :w :condi :tab-mode}
+          ;; :hyper-mouse          {:key :d :condi :tab-mode}
+          ;; :hyper-scroll         {:key :f :condi :tab-mode}
+          ;; :window-mode          {:key :w :condi :tab-mode}
           }
 
  :simlayers {
              :f-mode            {:key :f}     ; function
              :app-mode          {:key :q}
-             :num-mode          {:key :e}
-             :media-mode        {:key :r}
-             :mouse-mode        {:key :d
+             :num-mode          {:key :z}
+             :window-mode       {:key :w}
+             :media-mode        {:key :g}
+             :mouse-mode        {:key :e
                                  :afterup {:set ["mouse-scroll-mode" 0]}}
+             :superduper-mode   {:key :d}
              }
 
  :main [
@@ -109,6 +111,8 @@
          :rules [[:##left_command :left_option]]}
         {:des   "left_option to left_command"
          :rules [[:##left_option :left_command]]}
+        {:des   "launch alfred"
+         :rules [[[:g :h] :!Ospacebar]]}
 
         ;; more complex key settings
         {:des   "SHyper"
@@ -122,6 +126,11 @@
 
         {:des   "send l_ctrl+l in alacritty"
          :rules [:term [:!Cl :!Tl]]}
+
+        {:des   "launch alfred"
+         :rules [:f-mode
+                 [:spacebar :!Ospacebar]
+                 ]}
 
         {:des   "navigate mail"
          :rules [:mail :f-mode
@@ -143,11 +152,11 @@
                  [:f9 ["num-mode" 0]]
                  ]}
 
-        {:des   "Press fn twice to enter hyper-mode, press fn once to leave it"
-         :rules [[:fn ["hyper-mode" 1] ["fn-pressesd-once" 1]]
-                 [:fn [:fn ["fn-pressesd-once" 1]] ["hyper-mode" 0] {:delayed {:invoked ["fn-pressesd-once" 0] :canceled ["fn-pressesd-once" 0]}}]
-                 :hyper-mode
-                 [:fn ["hyper-mode" 0]]
+        {:des   "Press fn twice to enter superduper-mode, press fn once to leave it"
+         :rules [[:fn ["superduper-mode" 1] ["fn-pressesd-once" 1]]
+                 [:fn [:fn ["fn-pressesd-once" 1]] ["superduper-mode" 0] {:delayed {:invoked ["fn-pressesd-once" 0] :canceled ["fn-pressesd-once" 0]}}]
+                 :superduper-mode
+                 [:fn ["superduper-mode" 0]]
                  ]}
 
         ;; tilde mode
@@ -252,7 +261,7 @@
                  ;; make copy and pasting more ergonomic
                  [:a :!Ta]
                  [:d :!Td]
-                 [:z :!Tz]
+                 [:z :!Cz]
                  [:!Sz :!SCz]
                  [:x :!Cx]
                  [:c :!Tc]
@@ -281,13 +290,19 @@
         ;;          [:v :!Cv]              ; paste
         ;;          [:x :!Cx]              ; cut
         ;;          ]}
+        ;; {:des "SuperDuper <- S+D"
+        ;;  :rules [:!qmk [{:sim [:s :d]
+        ;;                  :simo {:interrupt true
+        ;;                         :dorder :insensitive
+        ;;                         :uorder :insensitive
+        ;;                         :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
 
-        {:des "Hyper Mode - Navigation [VI style]"
-         :rules [:!Emacs :hyper-mode
+        {:des "SuperDuper Mode - Navigation [VI style]"
+         :rules [:superduper-mode
                  ;; modifiers
                  [:##s :left_shift]
                  [:##a :left_option]
-                 [:##d :left_command]
+                 [:##f :left_command]
                  ;; movement
                  [:##j :down_arrow]
                  [:##k :up_arrow]
@@ -296,23 +311,19 @@
                  [:##b :!Oleft_arrow]
                  [:##w :!Oright_arrow]
                  ;; navigation between tabs
-                 [:u :!CSopen_bracket :browser]
-                 [:i :!CSclose_bracket :browser]
+                 [:!Su :!CSopen_bracket :!excel]
+                 [:!Su :!Oleft_arrow :excel]
+                 [:!Si :!CSclose_bracket :!excel]
+                 [:!Si :!Oright_arrow :excel]
                  ;; page navigation
                  [:##y :home]
-                 [:##u :page_up :!browser]
-                 [:##i :page_down :!browser]
+                 [:u :page_up]
+                 [:i :page_down]
                  [:##o :end]
                  ]}
 
-        {:des "Hyper Mode - Navigation [VI style]"
-         :rules [:!Emacs :hyper-moder
-                 [:##b :!Oleft_arrow :!term]
-                 [:##w :!Oright_arrow :!term]
-                 ]}
-
-        {:des "Hyper Mode - Deletion"
-         :rules [:!Emacs :hyper-mode
+        {:des "SuperDuper Mode - Deletion"
+         :rules [:superduper-mode
                  [:##s :left_shift]
                  [:##n :!Odelete_or_backspace]
                  [:##m :delete_or_backspace]
@@ -322,22 +333,66 @@
                  [:!Sslash [:!CSright_arrow :delete_or_backspace]]
                  ]}
 
+        ;; {:des "Hyper Mode - Navigation [VI style]"
+        ;;  :rules [:!Emacs :hyper-mode
+        ;;          ;; modifiers
+        ;;          [:##s :left_shift]
+        ;;          [:##a :left_option]
+        ;;          [:##d :left_command]
+        ;;          ;; movement
+        ;;          [:##j :down_arrow]
+        ;;          [:##k :up_arrow]
+        ;;          [:##h :left_arrow]
+        ;;          [:##l :right_arrow]
+        ;;          [:##b :!Oleft_arrow]
+        ;;          [:##w :!Oright_arrow]
+        ;;          ;; navigation between tabs
+        ;;          [:!Su :!CSopen_bracket :!excel]
+        ;;          [:!Su :!Oleft_arrow :excel]
+        ;;          [:!Si :!CSclose_bracket :!excel]
+        ;;          [:!Si :!Oright_arrow :excel]
+        ;;          ;; page navigation
+        ;;          [:##y :home]
+        ;;          [:u :page_up]
+        ;;          [:i :page_down]
+        ;;          [:##o :end]
+        ;;          ]}
+
+        {:des "Hyper Mode - Navigation [VI style]"
+         :rules [:!Emacs :hyper-moder
+                 [:##b :!Oleft_arrow :!term]
+                 [:##w :!Oright_arrow :!term]
+                 ]}
+
+        ;; {:des "Hyper Mode - Deletion"
+        ;;  :rules [:!Emacs :hyper-mode
+        ;;          [:##s :left_shift]
+        ;;          [:##n :!Odelete_or_backspace]
+        ;;          [:##m :delete_or_backspace]
+        ;;          [:##comma :delete_forward]
+        ;;          [:##period :!Odelete_forward]
+        ;;          [:slash [:!CSleft_arrow :delete_or_backspace]]
+        ;;          [:!Sslash [:!CSright_arrow :delete_or_backspace]]
+        ;;          ]}
+
         {:des   "Mouse Keys Mode v4 (rev 1)"
          :rules [[:##j {:mkey {:vwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  [:##h {:mkey {:hwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  [:##k {:mkey {:vwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  [:##l {:mkey {:hwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  :mouse-mode
-                 [:##j {:mkey {:y 2700}}]
-                 [:##k {:mkey {:y -2700}}]
-                 [:##h {:mkey {:x -2700}}]
-                 [:##l {:mkey {:x 2700}}]
+                 [:##j {:mkey {:y 1200}}]
+                 [:##k {:mkey {:y -1200}}]
+                 [:##h {:mkey {:x -1200}}]
+                 [:##l {:mkey {:x 1200}}]
                  [:##v {:pkey :button1}]
-                 [:##b {:pkey :button3}]
+                 ;; [:##b {:pkey :button3}]
+                 [:##b :!CTd]           ; get three finger lookup
                  [:##n {:pkey :button2}]
-                 [:##f ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
+                 [:##t ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
                  [:##i [:km "mouse: centre"]]
-                 [:##s {:mkey {:speed 0.5}}]]}
+                 [:##r {:mkey {:speed 2}}]
+                 [:##w {:mkey {:speed 0.5}}]]}
 
         {:des "Window Mode - Move and Resize Windows"
          :rules [:window-mode
@@ -349,7 +404,7 @@
                  [:i [:km "rectangle: next"]]
                  [:u [:km "rectangle: prev"]]
                  [:n [:km "rectangle: winclose"]]
-                 [:b [:km "rectangle: kill"]]
+                 [:slash [:km "rectangle: kill"]]
                  [:y :!CSgrave_accent_and_tilde]
                  [:p :!Cgrave_accent_and_tilde]
                  ;; [:open_bracket [:!Ctab :!CS]]
@@ -435,5 +490,12 @@
               :sample-configurations [
                                       {:des "Caps lock mode / Esc" :rules [[:##caps_lock {:set ["caps-lock-mode" 1]} nil {:alone :escape :afterup {:set ["caps-lock-mode" 0]}}]]}
                                       {:des "Caps vim navigation" :rules [:caps-lock-mode [:h :left_arrow] [:j :down_arrow] [:k :up_arrow] [:l :right_arrow]]}
+                                      {:des "SuperDuper <- S+D"
+                                       :rules [:!qmk [{:sim [:s :d]
+                                                       :simo {:interrupt true
+                                                              :dorder :insensitive
+                                                              :uorder :insensitive
+                                                              :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
+
                                       ]
               }}
