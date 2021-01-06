@@ -31,6 +31,7 @@
                           ]
                 :excel ["^com\\.microsoft\\.Excel$"]
                 :notability ["^com\\.gingerlabs\\.NotabilityMac$"]
+                :finder ["^com\\.apple\\.finder$"]
                 }
 
  :tos {
@@ -204,12 +205,12 @@
                  [:!QWEd [:open "/Applications/Discord.app"]]
                  [:!QWEf [:open "/System/Library/CoreServices/Finder.app"]]
                  [:!QWEz [:open "/Applications/zoom.us.app"]]
+                 [:!QWEx [:open "/Applications/Microsoft Excel.app"]]
                  [:!QWEb [:open "/Applications/firefox.app"]]
                  ;; !QWEright side
                  [:!QWE8 [:open "/Applications/Karabiner-EventViewer.app"]]
                  [:!QWE9 [:open "/Applications/Karabiner-Elements.app"]]
                  [:!QWE0 [:open "/Applications/Keyboard Maestro.app"]]
-                 [:!QWEi [:open "/Applications/Microsoft Excel.app"]]
                  [:!QWEo [:open "/Applications/Microsoft Outlook.app"]]
                  [:!QWEp [:open "/Applications/PDF Expert.app"]]
                  [:!QWEn [:open "/Applications/Notability.app"]]
@@ -265,6 +266,8 @@
                  [:u :page_up]
                  [:i :page_down]
                  [:##o :end]
+                 ;; random excel macro
+                 [:##semicolon [:!STOf :!STOCf] :excel]
                  ]}
 
         {:des "SuperDuper Mode - Deletion"
@@ -291,13 +294,17 @@
                  [:##k {:mkey {:vwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  [:##l {:mkey {:hwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  :mouse-mode
+                 [:##down_arrow  {:mkey {:y 1200}}]
+                 [:##up_arrow    {:mkey {:y -1200}}]
+                 [:##left_arrow  {:mkey {:x -1200}}]
+                 [:##right_arrow {:mkey {:x 1200}}]
                  [:##j {:mkey {:y 1200}}]
                  [:##k {:mkey {:y -1200}}]
                  [:##h {:mkey {:x -1200}}]
                  [:##l {:mkey {:x 1200}}]
                  [:##spacebar {:pkey :button1}]
                  [:##u :!CTd]           ; get three finger lookup
-                 [:##i [:km "mouse: centre"]]
+                 [:##i :!!6]
                  [:##o {:pkey :button2}]
                  [:##r ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
                  [:##q {:mkey {:speed 2}}]
@@ -306,21 +313,25 @@
         {:des "Window Mode - Move and Resize Windows"
          :rules [:window-mode
                  ;; rectangle settings
+                 [:##q :left_shift]
                  [:h :!!h]
                  [:l :!!l]
                  [:k :!!k]
                  [:j :!!j]
                  [:spacebar :!!return_or_enter]
-                 [:i :!!i]
-                 [:u :!!u]
+                 [:n :!!i]                ; next
+                 [:p :!!u]                ; previous
+                 [:!So {:pkey :button31}] ; expose all apps
+                 [:o   {:pkey :button32}] ; expose frontmost app
                  ;; close app and windows
-                 [:slash :!Cq]
-                 [:n :!Cw]
+                 [:!S0 :!Cq]              ; close the app
+                 [:0 :!Cw]                ; close the active window / tab
                  ;; cycle through app windows
-                 [:y :!CSgrave_accent_and_tilde]
-                 [:p :!Cgrave_accent_and_tilde]
-                 ;; [:open_bracket [:!Ctab :!CS]]
-                 [:close_bracket :!Ctab]
+                 [:!Sh :!CSgrave_accent_and_tilde]
+                 [:!Sl :!Cgrave_accent_and_tilde]
+                 ;; cycle through apps
+                 [:!Sk :!CStab]
+                 [:!Sj :!Ctab]
                  ]
          }
 
