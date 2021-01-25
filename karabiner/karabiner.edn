@@ -13,15 +13,17 @@
  ;; !! | mandatory command + control + optional + shift (hyper)
  ;; ## | optional any
  {:goku {:default true
-         :sim     50
-         :delay   500                  ; NOTE may want to increase these value
-         :alone   500
-         :held    500}
+         :sim     100
+         :delay   1000                  ; NOTE may want to increase these value
+         :alone   1000
+         :held    1000}
   }
 
  :devices      {:mac-int          [{:product_id 601 :vendor_id 1452}]
                 :magic-kbd        [{:product_id 24866 :vendor_id 7504}]
-                :annie-q          [{:product_id 34050 :vendor_id 2652}]
+                :annie-q          [{:product_id 41617 :vendor_id 1241}]
+                :annie-q-bt       [{:product_id 0 :vendor_id 13}]
+                ;; :planck           [{:product_id 34050 :vendor_id 2652}]
                 }
  :applications {
                 :Emacs ["^org\\.gnu\\.Emacs$"]
@@ -39,15 +41,15 @@
                 }
 
  :tos {
-       :left_paren  {:key :9 :modi [:left_shift] :lazy true}
-       :right_paren {:key :0 :modi [:left_shift] :lazy true}
+       :left_paren  {:key :9 :modi [:left_shift] :lazy true :condi [:!annie-q :!annie-q-bt]}
+       :right_paren {:key :0 :modi [:left_shift] :lazy true :condi [:!annie-q :!annie-q-bt]}
        :fn_tilde    {:key :##fn :lazy true}
        :tab         {:key :##tab :lazy true}
        :r_ctrl      {:key :##right_control :lazy true}
        :l_ctrl      {:key :##left_control :lazy true}
        :l_cmd       {:key :##left_command :lazy true}
        :shyper      {:key :right_command :modi [:right_option :right_shift :right_control] :lazy true}
-       :hyper       {:key :right_command :modi [:right_option :right_control] :lazy true}
+       :hyper       {:key :right_command :modi [:right_option :right_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
        :super       {:key :right_shift :modi [:right_command :right_control] :lazy true}
        :shopco      {:key :right_shift :modi [:right_option :right_control] :lazy true}
        }
@@ -63,13 +65,17 @@
  :layers {
           ;; NOTE for this setting to work need to remap caps_lock to control
           ;; key in settings
-          :fn-tilde-mode         {:key :grave_accent_and_tilde
-                                  :alone {:key :grave_accent_and_tilde}
-                                  :condi :!Emacs
-                                  }
+          ;; :fn-tilde-mode         {:key :grave_accent_and_tilde
+          ;;                         :alone {:key :grave_accent_and_tilde}
+          ;;                         :condi :!Emacs
+          ;;                         }
 
           :hyper-moder          {:key :return_or_enter
                                  :alone {:key :return_or_enter}
+                                 :condi :!Emacs
+                                 }
+          :annie-moder          {:key :right_control
+                                 :alone {:key :right_control}
                                  :condi :!Emacs
                                  }
           :tab-mode             {:key     :tab
@@ -77,50 +83,85 @@
                                            {:set ["media-mode" 0]}
                                            ]
                                  }
-          :media-mode           {:key :e :condi :tab-mode}
-          :num-mode             {:key :q :condi :tab-mode}
+          ;; :media-mode           {:key :e :condi :tab-mode}
+          ;; :num-mode             {:key :q :condi :tab-mode}
           }
 
  :simlayers {
              :f-mode            {:key :f} ; function
              :window-mode       {:key :w}
              :mouse-mode        {:key :e
-                                 :afterup {:set ["mouse-scroll-mode" 0]}}
-             ;; :superduper-mode   {:key :d}
-             ;; :media-mode        {:key :s}
-             ;; :num-mode          {:key :z}
+                                 :afterup {:set ["mouse-scroll-mode" 0]}
+                                 :condi :!annie-q}
+             :superduper-mode   {:key :d}
+             :media-mode        {:key :r :condi :!annie-q}
+             :num-mode          {:key :z}
+             :fn-tilde-mode     {:key :fn}
+             ;; :caps-mode         {:key :period}
              }
 
  :main [
         ;; remap keys, more simple changes
         {:des   "caps_lock to esc, to ctrl as modifier"
-         :rules [[:##caps_lock :l_ctrl nil {:alone :escape}]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##caps_lock :l_ctrl nil {:alone :escape}]]}
+        {:des   "backslash to backslash, to right_command as modifier"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##backslash :right_command nil {:alone :backslash}]]} ; experiment with 40% setup
         {:des   "return_enter to return_enter, to ctrl as modifier"
-         :rules [[:##return_or_enter :r_ctrl nil {:alone :return_or_enter}]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##return_or_enter :r_ctrl nil {:alone :return_or_enter}]]}
         {:des   "left_shift to paranthesis, or left_shift as modifier"
-         :rules [[:##left_shift :left_shift nil {:alone :left_paren}]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##left_shift :left_shift nil {:alone :left_paren}]]}
         {:des   "right_shift to paranthesis, or right_shift as modifier"
-         :rules [[:##right_shift :right_shift nil {:alone :right_paren}]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##right_shift :right_shift nil {:alone :right_paren}]]}
         {:des   "grave_accent_and_tilde to fn as modifier"
-         :rules [[:##grave_accent_and_tilde :fn_tilde nil {:alone :grave_accent_and_tilde}]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##grave_accent_and_tilde :fn_tilde nil {:alone :grave_accent_and_tilde}]]}
         {:des   "left_command to left_option"
-         :rules [[:##left_command :left_option]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##left_command :left_option]]}
         {:des   "left_option to left_command"
-         :rules [[:##left_option :left_command]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##left_option :left_command]]}
+
+        ;; {:des   "left_command to left_option"
+        ;;  :rules [:!annie-q [:##left_command :left_option]]}
+        ;; {:des   "left_option to left_command"
+        ;;  :rules [:!annie-q [:##left_option :left_command]]}
 
         ;; more complex key settings
+        ;; {:des   "Caps Mode"
+        ;;  :rules [:caps-mode
+        ;;          [:condi :!annie-q :!annie-q-bt]
+        ;;          [:grave_accent_and_tilde :caps_lock]
+        ;;          ]}
+
         {:des   "SHyper"
-         :rules [[:##left_control :shyper]]}
+         :rules [[:condi :!annie-q :!annie-q-bt];; [:##left_control :f20]
+                 [:##f20 :shyper]
+                 ]}
         {:des   "Hyper"
-         :rules [[:##right_command :hyper]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##right_command :hyper :!num-mode]]}
         {:des   "fn to Super"
-         :rules [[:##fn :super :nil {:alone :fn}]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##fn :super :nil {:alone :fn}]]}
         {:des   "right_option to shopco"
-         :rules [[:##right_option :shopco]]}
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##right_option :shopco]]}
 
         {:des   "launch alfred"
          :rules [:f-mode
                  [:spacebar :!Ospacebar]
+                 ]}
+
+        {:des   "Citrix settings"
+         :rules [[:condi :Citrix]
+                 [:##left_command :left_option]
+                 [:##left_option :left_command]
                  ]}
 
         {:des   "navigate mail"
@@ -136,19 +177,26 @@
                  [:!Cl :!Cright_arrow]
                  ]}
 
-        {:des   "Press f9 twice to enter num-mode, press f9 once to leave it"
-         :rules [[:f9 ["num-mode" 1] ["f9-pressesd-once" 1]]
-                 [:f9 [:f9 ["f9-pressesd-once" 1]] ["num-mode" 0] {:delayed {:invoked ["f9-pressesd-once" 0] :canceled ["f9-pressesd-once" 0]}}]
-                 :num-mode
-                 [:f9 ["num-mode" 0]]
+        {:des   "finder"
+         :rules [[:condi :annie-q :annie-q-bt]
+                 [:!Cend :!Co :finder]
+                 [:##right_control :left_command :finder]
+                 [:##f19 [:!STOf :!STOCf] :excel]
                  ]}
 
-        {:des   "Press fn twice to enter superduper-mode, press fn once to leave it"
-         :rules [[:fn ["superduper-mode" 1] ["fn-pressesd-once" 1]]
-                 [:fn [:fn ["fn-pressesd-once" 1]] ["superduper-mode" 0] {:delayed {:invoked ["fn-pressesd-once" 0] :canceled ["fn-pressesd-once" 0]}}]
-                 :superduper-mode
-                 [:fn ["superduper-mode" 0]]
-                 ]}
+        ;; {:des   "Press f9 twice to enter num-mode, press f9 once to leave it"
+        ;;  :rules [[:f9 ["num-mode" 1] ["f9-pressesd-once" 1]]
+        ;;          [:f9 [:f9 ["f9-pressesd-once" 1]] ["num-mode" 0] {:delayed {:invoked ["f9-pressesd-once" 0] :canceled ["f9-pressesd-once" 0]}}]
+        ;;          :num-mode
+        ;;          [:f9 ["num-mode" 0]]
+        ;;          ]}
+
+        ;; {:des   "Press fn twice to enter superduper-mode, press fn once to leave it"
+        ;;  :rules [[:fn ["superduper-mode" 1] ["fn-pressesd-once" 1]]
+        ;;          [:fn [:fn ["fn-pressesd-once" 1]] ["superduper-mode" 0] {:delayed {:invoked ["fn-pressesd-once" 0] :canceled ["fn-pressesd-once" 0]}}]
+        ;;          :superduper-mode
+        ;;          [:fn ["superduper-mode" 0]]
+        ;;          ]}
 
         ;; tilde mode
         {:des "grave_accent_and_tilde to map number row to function keys"
@@ -170,21 +218,36 @@
         ;; numpad mode
         {:des "Numpad Mode"
          :rules [:num-mode
-                 [:m :keypad_0]
-                 [:j :keypad_1]
-                 [:k :keypad_2]
-                 [:l :keypad_3]
-                 [:u :keypad_4]
-                 [:i :keypad_5]
-                 [:o :keypad_6]
-                 [:7 :keypad_7]
-                 [:8 :keypad_8]
-                 [:9 :keypad_9]
-                 [:period :keypad_period]
-                 [:slash :keypad_slash]
-                 [:semicolon :keypad_hyphen]
-                 [:p :keypad_plus]
-                 [:0 :keypad_asterisk]
+                 [:##v :left_shift]
+                 [:##x :left_option]
+                 [:spacebar :0]
+                 [:!Sspacebar :!S0]
+                 [:!Ospacebar :close_bracket]
+                 [:!SOspacebar :!Sclose_bracket]
+                 [:##m :1]
+                 [:##comma :2]
+                 [:##period :3]
+                 [:h :keypad_period]
+                 [:right_command :keypad_period]
+                 [:!Oslash :backslash]
+                 [:!SOslash :!Sbackslash]
+                 [:slash :slash]
+                 [:##j :4]
+                 [:##k :5]
+                 [:##l :6]
+                 [:##u :7]
+                 [:##i :8]
+                 [:o :9]
+                 [:!So :!S9]
+                 [:##semicolon :hyphen]
+                 [:##p :equal_sign]
+                 ;; [:!Sp :!Sequal_sign]
+                 [:!Oo :open_bracket]
+                 [:!SOo :!Sopen_bracket]
+                 ;; [:!Sp :equal_sign]
+                 ;; [:x :keypad_asterisk]
+                 ;; [:e :equal_sign]
+                 ;; [:##b ["fn-tilde-mode" 1] nil {:afterup ["fn-tilde-mode" 0]}]
                  ]}
 
         ;; media control mode
@@ -210,6 +273,7 @@
                  [:!QWEf [:open "/System/Library/CoreServices/Finder.app"]]
                  [:!QWEz [:open "/Applications/zoom.us.app"]]
                  [:!QWEx [:open "/Applications/Microsoft Excel.app"]]
+                 [:!QWEc [:open "/System/Applications/Calendar.app"]]
                  [:!QWEb [:open "/Applications/firefox.app"]]
                  ;; !QWEright side
                  [:!QWE8 [:open "/Applications/Karabiner-EventViewer.app"]]
@@ -226,12 +290,14 @@
         {:des "Hyper Moder - Control"
          :rules [:!Emacs :hyper-moder
                  ;; make copy and pasting more ergonomic
-                 [:a :!Ta]
+                 [:a :!Ca]
+                 [:f :!Cf :!term]
+                 [:b :!Cb :!term]
                  [:d :!Td]
                  [:z :!Cz]
                  [:!Sz :!SCz]
                  [:x :!Cx]
-                 [:c :!Tc]
+                 [:c :!Cc]
                  [:v :!Cv]
                  ;; keep control key working
                  [:q :!Wq]
@@ -247,26 +313,57 @@
                  [:b :!Wb :term]
                  ]}
 
-        {:des "SuperDuper <- S+D"
-         :rules [:!qmk [{:sim [:s :d]
-                         :simo {:interrupt true
-                                :dorder :insensitive
-                                :uorder :insensitive
-                                :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
+        {:des "Hyper Moder - Control"
+         :rules [:!Emacs :annie-moder
+                 ;; make copy and pasting more ergonomic
+                 [:a :!Ca :!term]
+                 [:a :!Wa :term]
+                 [:f :!Cf :!term]
+                 [:!Sf :!SCf :!term]
+                 [:b :!Cb :!term]
+                 [:d :!Td]
+                 [:z :!Cz]
+                 [:!Sz :!SCz]
+                 [:x :!Cx]
+                 [:c :!Cc]
+                 [:v :!Cv]
+                 ;; keep control key working
+                 [:q :!Wq]
+                 [:w :!Ww :term]
+                 [:w :!Cw :!term]
+                 [:e :!We]
+                 [:r :!Wr]
+                 [:t :!Wt]
+                 [:r :!Wr]
+                 [:s :!Ws]
+                 [:f :!Wf]
+                 [:g :!Wg :term]
+                 [:b :!Wb :term]
+                 ]}
+
+        ;; {:des "SuperDuper <- S+D"
+        ;;  :rules [:!annie-q [{:sim [:s :d]
+        ;;                  :simo {:interrupt true
+        ;;                         :dorder :insensitive
+        ;;                         :uorder :insensitive
+        ;;                         :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
 
         {:des "SuperDuper Mode - Navigation [VI style]"
          :rules [:superduper-mode
                  ;; modifiers
-                 [:##f :left_shift]
+                 [:##s :left_shift]
                  [:##a :left_option]
-                 ;; [:##f :left_command]
+                 [:##f :left_command]
                  ;; movement
                  [:##j :down_arrow]
                  [:##k :up_arrow]
                  [:##h :left_arrow]
                  [:##l :right_arrow]
-                 [:##b :!Oleft_arrow]
-                 [:##w :!Oright_arrow]
+                 ;; [:##b :!Oleft_arrow]
+                 ;; [:##w :!Oright_arrow]
+                 ;; emacs specific
+                 [:##g :!Sopen_bracket :Emacs]
+                 [:##semicolon :!Sclose_bracket :Emacs]
                  ;; navigation between tabs
                  [:!Su :!CSopen_bracket :!excel]
                  [:!Su :!Oleft_arrow :excel]
@@ -274,12 +371,12 @@
                  [:!Si :!Oright_arrow :excel]
                  ;; page navigation
                  [:##y :home]
-                 [:u :page_up]
-                 [:i :page_down]
-                 [:##o :end]
+                 [:u :page_down]
+                 [:i :page_up]
+                 [:##o :end :!finder]
                  ;; random excel macro
                  [:##semicolon [:!STOf :!STOCf] :excel]
-                 [:##z ["num-mode" 1] nil {:afterup ["num-mode" 0]}]
+                 ;; [:##z ["num-mode" 1] nil {:afterup ["num-mode" 0]}]
                  ]}
 
         {:des "SuperDuper Mode - Deletion"
@@ -290,8 +387,8 @@
                  [:##comma :delete_forward]
                  [:##period :!Odelete_forward :!Emacs]
                  [:##period :!Od :Emacs]
-                 [:slash [:!CSleft_arrow :delete_or_backspace]]
-                 [:!Sslash [:!CSright_arrow :delete_or_backspace]]
+                 [:b [:!CSleft_arrow :delete_or_backspace]]
+                 [:slash [:!CSright_arrow :delete_or_backspace]]
                  ]}
 
         {:des "Hyper Mode - Navigation [VI style]"
@@ -301,29 +398,41 @@
                  ]}
 
         {:des   "Mouse Keys Mode v4 (rev 1)"
-         :rules [[:##j {:mkey {:vwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
-                 [:##h {:mkey {:hwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
-                 [:##k {:mkey {:vwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
-                 [:##l {:mkey {:hwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+         :rules [:!annie-q
+                 ;; [:##j {:mkey {:vwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 ;; [:##h {:mkey {:hwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 ;; [:##k {:mkey {:vwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
+                 ;; [:##l {:mkey {:hwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  :mouse-mode
+                 [:##u {:mkey {:vwheel 32}}]
+                 [:##y {:mkey {:hwheel 32}}]
+                 [:##i {:mkey {:vwheel -32}}]
+                 [:##o {:mkey {:hwheel -32}}]
                  [:##down_arrow  {:mkey {:y 1200}}]
                  [:##up_arrow    {:mkey {:y -1200}}]
                  [:##left_arrow  {:mkey {:x -1200}}]
                  [:##right_arrow {:mkey {:x 1200}}]
+                 ;; vi style navigation
                  [:##j {:mkey {:y 1200}}]
                  [:##k {:mkey {:y -1200}}]
                  [:##h {:mkey {:x -1200}}]
                  [:##l {:mkey {:x 1200}}]
+                 [:##comma :!!6]
+                 ;; alternative arrow key style navigation
+                 ;; [:##k {:mkey {:y 1200}}]
+                 ;; [:##i {:mkey {:y -1200}}]
+                 ;; [:##j {:mkey {:x -1200}}]
+                 ;; [:##l {:mkey {:x 1200}}]
+                 ;; [:##t :!!6]
                  [:##spacebar {:pkey :button1}]
-                 [:##u :!CTd]           ; get three finger lookup
-                 [:##i :!!6]
-                 [:##o {:pkey :button2}]
-                 [:##r ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
+                 [:##m :!CTd]           ; get three finger lookup
+                 [:##period {:pkey :button2}]
+                 ;; [:##r ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
                  [:##q {:mkey {:speed 2}}]
                  [:##w {:mkey {:speed 0.5}}]
                  ;; PDF expert settings
                  [:##b :!TCh :browser]  ; highlight
-                 [:##m :!TCu :browser]  ; underline
+                 [:##n :!TCu :browser]  ; underline
                  ]}
 
         {:des "Window Mode - Move and Resize Windows"
@@ -340,8 +449,8 @@
                  [:!So {:pkey :button31}] ; expose all apps
                  [:o   {:pkey :button32}] ; expose frontmost app
                  ;; close app and windows
-                 [:!S0 :!Cq]            ; close the app
-                 [:0 :!Cw]              ; close the active window / tab
+                 ;; [:!S0 :!Cq]            ; close the app
+                 ;; [:0 :!Cw]              ; close the active window / tab
                  ;; cycle through app windows
                  [:!Sh :!CSgrave_accent_and_tilde]
                  [:!Sl :!Cgrave_accent_and_tilde]
