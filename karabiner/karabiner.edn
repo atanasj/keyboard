@@ -48,10 +48,10 @@
        :r_ctrl      {:key :##right_control :lazy true}
        :l_ctrl      {:key :##left_control :lazy true}
        :l_cmd       {:key :##left_command :lazy true}
-       :shyper      {:key :right_command :modi [:right_option :right_shift :right_control] :lazy true}
-       :hyper       {:key :right_command :modi [:right_option :right_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
-       :super       {:key :right_shift :modi [:right_command :right_control] :lazy true}
-       :shopco      {:key :right_shift :modi [:right_option :right_control] :lazy true}
+       :hyper      {:key :left_command :modi [:left_option :left_shift :left_control] :lazy true}
+       :meh        {:key :left_command :modi [:left_option :left_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
+       :super      {:key :left_shift :modi [:left_command :left_control] :lazy true}
+       :shopco     {:key :left_shift :modi [:left_option :left_control] :lazy true}
        }
 
  :templates {
@@ -70,7 +70,7 @@
           ;;                         :condi :!Emacs
           ;;                         }
 
-          :hyper-moder          {:key :return_or_enter
+          :meh-moder          {:key :return_or_enter
                                  :alone {:key :return_or_enter}
                                  :condi :!Emacs
                                  }
@@ -141,11 +141,11 @@
 
         {:des   "SHyper"
          :rules [[:condi :!annie-q :!annie-q-bt];; [:##left_control :f20]
-                 [:##f20 :shyper]
+                 [:##f20 :hyper]
                  ]}
         {:des   "Hyper"
          :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##right_command :hyper :!num-mode]]}
+                 [:##right_command :meh :!num-mode]]}
         {:des   "fn to Super"
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##fn :super :nil {:alone :fn}]]}
@@ -180,7 +180,7 @@
         {:des   "finder"
          :rules [[:condi :annie-q :annie-q-bt]
                  [:!Cend :!Co :finder]
-                 [:##right_control :left_command :finder]
+                 ;; [:##right_control :left_command :finder]
                  [:##f19 [:!STOf :!STOCf] :excel]
                  ]}
 
@@ -265,30 +265,30 @@
         {:des "App Mode - launch apps"
          :rules [
                  ;; left side
-                 [:!QWEw [:open "/Applications/Microsoft Word.app"]]
-                 [:!QWEe [:open "/Applications/Emacs.app"]]
-                 [:!QWEr [:open "/Applications/Zotero.app"]]
-                 [:!QWEt [:open "/Applications/Alacritty.app"]]
-                 [:!QWEd [:open "/Applications/Discord.app"]]
-                 [:!QWEf [:open "/System/Library/CoreServices/Finder.app"]]
-                 [:!QWEz [:open "/Applications/zoom.us.app"]]
-                 [:!QWEx [:open "/Applications/Microsoft Excel.app"]]
-                 [:!QWEc [:open "/System/Applications/Calendar.app"]]
-                 [:!QWEb [:open "/Applications/firefox.app"]]
-                 ;; !QWEright side
-                 [:!QWE8 [:open "/Applications/Karabiner-EventViewer.app"]]
-                 [:!QWE9 [:open "/Applications/Karabiner-Elements.app"]]
-                 [:!QWE0 [:open "/Applications/Keyboard Maestro.app"]]
-                 [:!QWEo [:open "/Applications/Microsoft Outlook.app"]]
-                 [:!QWEp [:open "/Applications/PDF Expert.app"]]
-                 [:!QWEn [:open "/Applications/Notability.app"]]
-                 [:!QWEm [:open "/System/Applications/Music.app"]]
-                 [:!QWEl [:open "/Applications/XMind.app"]]
-                 [:!QWEbackslash [:open "/System/Applications/Messages.app"]]
+                 [:!CTOw [:open "/Applications/Microsoft Word.app"]]
+                 [:!CTOe [:open "/Applications/Emacs.app"]]
+                 [:!CTOr [:open "/Applications/Zotero.app"]]
+                 [:!CTOt [:open "/Applications/Alacritty.app"]]
+                 [:!CTOd [:open "/Applications/Discord.app"]]
+                 [:!CTOf [:open "/System/Library/CoreServices/Finder.app"]]
+                 [:!CTOz [:open "/Applications/zoom.us.app"]]
+                 [:!CTOx [:open "/Applications/Microsoft Excel.app"]]
+                 [:!CTOc [:open "/System/Applications/Calendar.app"]]
+                 [:!CTOb [:open "/Applications/firefox.app"]]
+                 ;; !CTOright side
+                 [:!CTO8 [:open "/Applications/Karabiner-EventViewer.app"]]
+                 [:!CTO9 [:open "/Applications/Karabiner-Elements.app"]]
+                 [:!CTO0 [:open "/Applications/Keyboard Maestro.app"]]
+                 [:!CTOo [:open "/Applications/Microsoft Outlook.app"]]
+                 [:!CTOp [:open "/Applications/PDF Expert.app"]]
+                 [:!CTOn [:open "/Applications/Notability.app"]]
+                 [:!CTOm [:open "/System/Applications/Music.app"]]
+                 [:!CTOl [:open "/Applications/XMind.app"]]
+                 [:!CTObackslash [:open "/System/Applications/Messages.app"]]
                  ]}
 
         {:des "Hyper Moder - Control"
-         :rules [:!Emacs :hyper-moder
+         :rules [:!Emacs :meh-moder
                  ;; make copy and pasting more ergonomic
                  [:a :!Ca]
                  [:f :!Cf :!term]
@@ -392,7 +392,7 @@
                  ]}
 
         {:des "Hyper Mode - Navigation [VI style]"
-         :rules [:!Emacs :hyper-moder
+         :rules [:!Emacs :meh-moder
                  [:##b :!Oleft_arrow :!term]
                  [:##w :!Oright_arrow :!term]
                  ]}
