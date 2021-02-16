@@ -13,7 +13,7 @@
  ;; !! | mandatory command + control + optional + shift (hyper)
  ;; ## | optional any
  {:goku {:default true
-         :sim     100
+         :sim     350
          :delay   1000                  ; NOTE may want to increase these value
          :alone   1000
          :held    1000}
@@ -48,10 +48,11 @@
        :r_ctrl      {:key :##right_control :lazy true}
        :l_ctrl      {:key :##left_control :lazy true}
        :l_cmd       {:key :##left_command :lazy true}
-       :hyper      {:key :left_command :modi [:left_option :left_shift :left_control] :lazy true}
-       :meh        {:key :left_command :modi [:left_option :left_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
-       :super      {:key :left_shift :modi [:left_command :left_control] :lazy true}
-       :shopco     {:key :left_shift :modi [:left_option :left_control] :lazy true}
+       :hyper       {:key :left_command :modi [:left_option :left_shift :left_control] :lazy true}
+       :meh         {:key :left_command :modi [:left_option :left_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
+       :super       {:key :left_command :modi [:left_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
+       :meta        {:key :left_command :modi [:left_option] :lazy true :condi [:!annie-q :!annie-q-bt]}
+       :shopco      {:key :left_shift :modi [:left_option :left_control] :lazy true}
        }
 
  :templates {
@@ -65,12 +66,12 @@
  :layers {
           ;; NOTE for this setting to work need to remap caps_lock to control
           ;; key in settings
-          ;; :fn-tilde-mode         {:key :grave_accent_and_tilde
-          ;;                         :alone {:key :grave_accent_and_tilde}
-          ;;                         :condi :!Emacs
-          ;;                         }
+          :fn-tilde-mode         {:key :grave_accent_and_tilde
+                                  :alone {:key :grave_accent_and_tilde}
+                                  :condi :!Emacs
+                                  }
 
-          :meh-moder          {:key :return_or_enter
+          :meh-moder            {:key :return_or_enter
                                  :alone {:key :return_or_enter}
                                  :condi :!Emacs
                                  }
@@ -78,13 +79,6 @@
                                  :alone {:key :right_control}
                                  :condi :!Emacs
                                  }
-          :tab-mode             {:key     :tab
-                                 :afterup [{:set ["num-mode" 0]}
-                                           {:set ["media-mode" 0]}
-                                           ]
-                                 }
-          ;; :media-mode           {:key :e :condi :tab-mode}
-          ;; :num-mode             {:key :q :condi :tab-mode}
           }
 
  :simlayers {
@@ -94,10 +88,8 @@
                                  :afterup {:set ["mouse-scroll-mode" 0]}
                                  :condi :!annie-q}
              :superduper-mode   {:key :d}
-             :media-mode        {:key :r :condi :!annie-q}
+             ;; :media-mode        {:key :r :condi :!annie-q}
              :num-mode          {:key :z}
-             :fn-tilde-mode     {:key :fn}
-             ;; :caps-mode         {:key :period}
              }
 
  :main [
@@ -105,57 +97,57 @@
         {:des   "caps_lock to esc, to ctrl as modifier"
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##caps_lock :l_ctrl nil {:alone :escape}]]}
-        {:des   "backslash to backslash, to right_command as modifier"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##backslash :right_command nil {:alone :backslash}]]} ; experiment with 40% setup
         {:des   "return_enter to return_enter, to ctrl as modifier"
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##return_or_enter :r_ctrl nil {:alone :return_or_enter}]]}
+
+        {:des   "spacebar to left_option as modifier"
+         :rules [[:condi :!annie-q :!num-mode]
+                 [:##spacebar :left_option nil {:alone :spacebar}]]}
+
+        {:des   "backslash to backslash, to right_command as modifier"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##backslash :right_command nil {:alone :backslash}]]} ; experiment with 40% setup
+        {:des   "tab to tab alone, or left_command as modifier"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##tab :left_command nil {:alone :tab}]]}
+
+        {:des   "grave_accent_and_tilde to fn as modifier"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##grave_accent_and_tilde :fn_tilde nil {:alone :grave_accent_and_tilde}]]}
+
+        ;; make combo keys more comfy
+        {:des   "left_command to meta"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##left_command :meta]]} ;command+option
+        {:des   "left_option to super"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##left_option :super]]} ;command+control
+
+        {:des   "right_command to Meh"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##right_command :meh :!num-mode]]} ;command+option+control
+        {:des   "right_option to shopco"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##right_option :shopco]]} ;shift+option+control
+
+        {:des   "left_control(f20) to Hyper"
+         :rules [[:condi :!annie-q :!annie-q-bt] ;; [:##left_control :f20]
+                 [:##f20 :hyper]]}               ;command+option+control+shift
+
+        ;; space cadet shift
         {:des   "left_shift to paranthesis, or left_shift as modifier"
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##left_shift :left_shift nil {:alone :left_paren}]]}
         {:des   "right_shift to paranthesis, or right_shift as modifier"
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##right_shift :right_shift nil {:alone :right_paren}]]}
-        {:des   "grave_accent_and_tilde to fn as modifier"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##grave_accent_and_tilde :fn_tilde nil {:alone :grave_accent_and_tilde}]]}
-        {:des   "left_command to left_option"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##left_command :left_option]]}
-        {:des   "left_option to left_command"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##left_option :left_command]]}
 
-        ;; {:des   "left_command to left_option"
-        ;;  :rules [:!annie-q [:##left_command :left_option]]}
-        ;; {:des   "left_option to left_command"
-        ;;  :rules [:!annie-q [:##left_option :left_command]]}
-
-        ;; more complex key settings
-        ;; {:des   "Caps Mode"
-        ;;  :rules [:caps-mode
-        ;;          [:condi :!annie-q :!annie-q-bt]
-        ;;          [:grave_accent_and_tilde :caps_lock]
-        ;;          ]}
-
-        {:des   "SHyper"
-         :rules [[:condi :!annie-q :!annie-q-bt];; [:##left_control :f20]
-                 [:##f20 :hyper]
-                 ]}
-        {:des   "Hyper"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##right_command :meh :!num-mode]]}
-        {:des   "fn to Super"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##fn :super :nil {:alone :fn}]]}
-        {:des   "right_option to shopco"
-         :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##right_option :shopco]]}
-
+        ;; App based settings
         {:des   "launch alfred"
-         :rules [:f-mode
-                 [:spacebar :!Ospacebar]
+         :rules [:!annie-q :f-mode
+                 [:spacebar :!Cspacebar]
+                 [:slash :!SCslash]
                  ]}
 
         {:des   "Citrix settings"
@@ -183,20 +175,6 @@
                  ;; [:##right_control :left_command :finder]
                  [:##f19 [:!STOf :!STOCf] :excel]
                  ]}
-
-        ;; {:des   "Press f9 twice to enter num-mode, press f9 once to leave it"
-        ;;  :rules [[:f9 ["num-mode" 1] ["f9-pressesd-once" 1]]
-        ;;          [:f9 [:f9 ["f9-pressesd-once" 1]] ["num-mode" 0] {:delayed {:invoked ["f9-pressesd-once" 0] :canceled ["f9-pressesd-once" 0]}}]
-        ;;          :num-mode
-        ;;          [:f9 ["num-mode" 0]]
-        ;;          ]}
-
-        ;; {:des   "Press fn twice to enter superduper-mode, press fn once to leave it"
-        ;;  :rules [[:fn ["superduper-mode" 1] ["fn-pressesd-once" 1]]
-        ;;          [:fn [:fn ["fn-pressesd-once" 1]] ["superduper-mode" 0] {:delayed {:invoked ["fn-pressesd-once" 0] :canceled ["fn-pressesd-once" 0]}}]
-        ;;          :superduper-mode
-        ;;          [:fn ["superduper-mode" 0]]
-        ;;          ]}
 
         ;; tilde mode
         {:des "grave_accent_and_tilde to map number row to function keys"
@@ -241,18 +219,13 @@
                  [:!So :!S9]
                  [:##semicolon :hyphen]
                  [:##p :equal_sign]
-                 ;; [:!Sp :!Sequal_sign]
                  [:!Oo :open_bracket]
                  [:!SOo :!Sopen_bracket]
-                 ;; [:!Sp :equal_sign]
-                 ;; [:x :keypad_asterisk]
-                 ;; [:e :equal_sign]
-                 ;; [:##b ["fn-tilde-mode" 1] nil {:afterup ["fn-tilde-mode" 0]}]
                  ]}
 
         ;; media control mode
         {:des "media controls"
-         :rules [:media-mode
+         :rules [:fn-tilde-mode :!annie-q
                  [:m :mute]
                  [:p :play_or_pause]
                  [:k :volume_increment]
@@ -274,11 +247,12 @@
                  [:!CTOz [:open "/Applications/zoom.us.app"]]
                  [:!CTOx [:open "/Applications/Microsoft Excel.app"]]
                  [:!CTOc [:open "/System/Applications/Calendar.app"]]
+                 [:!CTOv [:open "/Applications/Visual Studio Code.app"]]
                  [:!CTOb [:open "/Applications/firefox.app"]]
                  ;; !CTOright side
                  [:!CTO8 [:open "/Applications/Karabiner-EventViewer.app"]]
                  [:!CTO9 [:open "/Applications/Karabiner-Elements.app"]]
-                 [:!CTO0 [:open "/Applications/Keyboard Maestro.app"]]
+                 ;; [:!CTO0 [:open "/Applications/Keyboard Maestro.app"]]
                  [:!CTOo [:open "/Applications/Microsoft Outlook.app"]]
                  [:!CTOp [:open "/Applications/PDF Expert.app"]]
                  [:!CTOn [:open "/Applications/Notability.app"]]
@@ -288,7 +262,7 @@
                  ]}
 
         {:des "Hyper Moder - Control"
-         :rules [:!Emacs :meh-moder
+         :rules [:meh-moder
                  ;; make copy and pasting more ergonomic
                  [:a :!Ca]
                  [:f :!Cf :!term]
@@ -297,7 +271,8 @@
                  [:z :!Cz]
                  [:!Sz :!SCz]
                  [:x :!Cx]
-                 [:c :!Cc]
+                 [:c :!Cc :!term]
+                 [:c :!Wc :term]
                  [:v :!Cv]
                  ;; keep control key working
                  [:q :!Wq]
@@ -314,7 +289,7 @@
                  ]}
 
         {:des "Hyper Moder - Control"
-         :rules [:!Emacs :annie-moder
+         :rules [:annie-moder
                  ;; make copy and pasting more ergonomic
                  [:a :!Ca :!term]
                  [:a :!Wa :term]
@@ -325,7 +300,8 @@
                  [:z :!Cz]
                  [:!Sz :!SCz]
                  [:x :!Cx]
-                 [:c :!Cc]
+                 [:c :!Cc :!term]
+                 [:c :!Wc :term]
                  [:v :!Cv]
                  ;; keep control key working
                  [:q :!Wq]
@@ -340,13 +316,6 @@
                  [:g :!Wg :term]
                  [:b :!Wb :term]
                  ]}
-
-        ;; {:des "SuperDuper <- S+D"
-        ;;  :rules [:!annie-q [{:sim [:s :d]
-        ;;                  :simo {:interrupt true
-        ;;                         :dorder :insensitive
-        ;;                         :uorder :insensitive
-        ;;                         :afterup {:set ["superduper-mode" 0]}}} {:set ["superduper-mode" 1]}]]}
 
         {:des "SuperDuper Mode - Navigation [VI style]"
          :rules [:superduper-mode
@@ -399,10 +368,6 @@
 
         {:des   "Mouse Keys Mode v4 (rev 1)"
          :rules [:!annie-q
-                 ;; [:##j {:mkey {:vwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
-                 ;; [:##h {:mkey {:hwheel 32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
-                 ;; [:##k {:mkey {:vwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
-                 ;; [:##l {:mkey {:hwheel -32}} [["mouse-scroll-mode" 1]] ["mouse-mode" 1]]
                  :mouse-mode
                  [:##u {:mkey {:vwheel 32}}]
                  [:##y {:mkey {:hwheel 32}}]
@@ -418,16 +383,9 @@
                  [:##h {:mkey {:x -1200}}]
                  [:##l {:mkey {:x 1200}}]
                  [:##comma :!!6]
-                 ;; alternative arrow key style navigation
-                 ;; [:##k {:mkey {:y 1200}}]
-                 ;; [:##i {:mkey {:y -1200}}]
-                 ;; [:##j {:mkey {:x -1200}}]
-                 ;; [:##l {:mkey {:x 1200}}]
-                 ;; [:##t :!!6]
                  [:##spacebar {:pkey :button1}]
                  [:##m :!CTd]           ; get three finger lookup
                  [:##period {:pkey :button2}]
-                 ;; [:##r ["mouse-scroll-mode" 1] nil {:afterup ["mouse-scroll-mode" 0]}]
                  [:##q {:mkey {:speed 2}}]
                  [:##w {:mkey {:speed 0.5}}]
                  ;; PDF expert settings
@@ -448,9 +406,6 @@
                  [:p :!!u]                ; previous
                  [:!So {:pkey :button31}] ; expose all apps
                  [:o   {:pkey :button32}] ; expose frontmost app
-                 ;; close app and windows
-                 ;; [:!S0 :!Cq]            ; close the app
-                 ;; [:0 :!Cw]              ; close the active window / tab
                  ;; cycle through app windows
                  [:!Sh :!CSgrave_accent_and_tilde]
                  [:!Sl :!Cgrave_accent_and_tilde]
