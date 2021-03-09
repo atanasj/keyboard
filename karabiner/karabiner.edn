@@ -13,10 +13,10 @@
  ;; !! | mandatory command + control + optional + shift (hyper)
  ;; ## | optional any
  {:goku {:default true
-         :sim     350
-         :delay   1000                  ; NOTE may want to increase these value
-         :alone   1000
-         :held    1000}
+         :sim     350                   ; simultaneous_threshold
+         :delay   1000                  ; to_delayed_action_delay
+         :alone   1000                  ; to_if_alone_timeout
+         :held    1000}                 ; to_if_held_threshold
   }
 
  :devices      {:mac-int          [{:product_id 601 :vendor_id 1452}]
@@ -48,6 +48,7 @@
        :r_ctrl      {:key :##right_control :lazy true}
        :l_ctrl      {:key :##left_control :lazy true}
        :l_cmd       {:key :##left_command :lazy true}
+       :l_opt       {:key :##left_option :lazy true}
        :hyper       {:key :left_command :modi [:left_option :left_shift :left_control] :lazy true}
        :meh         {:key :left_command :modi [:left_option :left_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
        :super       {:key :left_command :modi [:left_control] :lazy true :condi [:!annie-q :!annie-q-bt]}
@@ -90,9 +91,20 @@
              :superduper-mode   {:key :d}
              ;; :media-mode        {:key :r :condi :!annie-q}
              :num-mode          {:key :z}
+             :fn-mode           {:key :fn
+                                 :afterup {:set ["ext-trackpad-mode" 0]}
+                                 :condi :ext-trackpad}
              }
 
  :main [
+        ;; {:des "F & J => Enable/Disable External Trackpad"
+        ;;  ;; <from> <to> <conditions>
+        ;;  :rules [[[:f :j] ["disable_ext_trackpad" 0] :disable_ext_trackpad]
+        ;;          [[:f :j] ["disable_ext_trackapd" 1]]
+        ;;          ;; use [<cond1> <cond2> ...] for multiple conditions
+        ;;          [{:any "pointing_button"} :vk_none
+        ;;           [:disable_ext_trackpad :ext-trackpad]]]}
+
         ;; remap keys, more simple changes
         {:des   "caps_lock to esc, to ctrl as modifier"
          :rules [[:condi :!annie-q :!annie-q-bt]
@@ -101,9 +113,9 @@
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##return_or_enter :r_ctrl nil {:alone :return_or_enter}]]}
 
-        {:des   "spacebar to left_option as modifier"
+        {:des   "escape to escape alone, fn as modifier"
          :rules [[:condi :!annie-q :!num-mode]
-                 [:##spacebar :left_option nil {:alone :spacebar}]]}
+                 [:##escape :fn nil {:alone :escape}]]}
 
         {:des   "backslash to backslash, to right_command as modifier"
          :rules [[:condi :!annie-q :!annie-q-bt]
@@ -117,12 +129,15 @@
                  [:##grave_accent_and_tilde :fn_tilde nil {:alone :grave_accent_and_tilde}]]}
 
         ;; make combo keys more comfy
-        {:des   "left_command to meta"
+        {:des   "left_command to option"
          :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##left_command :meta]]} ;command+option
-        {:des   "left_option to super"
+                 [:##left_command :l_opt]]}
+        {:des   "left_option to meta"
          :rules [[:condi :!annie-q :!annie-q-bt]
-                 [:##left_option :super]]} ;command+control
+                 [:##left_option :meta nil {:alone :spacebar}]]} ;command+option
+        {:des   "left_contro(f20) to super"
+         :rules [[:condi :!annie-q :!annie-q-bt]
+                 [:##f20 :super nil {:alone :escape}]]} ;command+control
 
         {:des   "right_command to Meh"
          :rules [[:condi :!annie-q :!annie-q-bt]
@@ -131,9 +146,9 @@
          :rules [[:condi :!annie-q :!annie-q-bt]
                  [:##right_option :shopco]]} ;shift+option+control
 
-        {:des   "left_control(f20) to Hyper"
+        {:des   "fn to Hyper"
          :rules [[:condi :!annie-q :!annie-q-bt] ;; [:##left_control :f20]
-                 [:##f20 :hyper]]}               ;command+option+control+shift
+                 [:##fn :hyper]]}               ;command+option+control+shift
 
         ;; space cadet shift
         {:des   "left_shift to paranthesis, or left_shift as modifier"
@@ -177,8 +192,9 @@
                  ]}
 
         ;; tilde mode
-        {:des "grave_accent_and_tilde to map number row to function keys"
+        {:des "tilde to fn and media keys"
          :rules[:fn-tilde-mode
+                ;; fn key layer
                 [:1 :f1]
                 [:2 :f2]
                 [:3 :f3]
@@ -191,55 +207,21 @@
                 [:0 :f10]
                 [:hyphen :f11]
                 [:equal_sign :f12]
+                ;; media mode
+                [:m :mute]
+                [:p :play_or_pause]
+                [:k :volume_increment]
+                [:j :volume_decrement]
+                [:l :fastforward]
+                [:h :rewind]
                 ]}
 
-        ;; numpad mode
-        {:des "Numpad Mode"
-         :rules [:num-mode
-                 [:##v :left_shift]
-                 [:##x :left_option]
-                 [:spacebar :0]
-                 [:!Sspacebar :!S0]
-                 [:!Ospacebar :close_bracket]
-                 [:!SOspacebar :!Sclose_bracket]
-                 [:##m :1]
-                 [:##comma :2]
-                 [:##period :3]
-                 [:h :keypad_period]
-                 [:right_command :keypad_period]
-                 [:!Oslash :backslash]
-                 [:!SOslash :!Sbackslash]
-                 [:slash :slash]
-                 [:##j :4]
-                 [:##k :5]
-                 [:##l :6]
-                 [:##u :7]
-                 [:##i :8]
-                 [:o :9]
-                 [:!So :!S9]
-                 [:##semicolon :hyphen]
-                 [:##p :equal_sign]
-                 [:!Oo :open_bracket]
-                 [:!SOo :!Sopen_bracket]
-                 ]}
-
-        ;; media control mode
-        {:des "media controls"
-         :rules [:fn-tilde-mode :!annie-q
-                 [:m :mute]
-                 [:p :play_or_pause]
-                 [:k :volume_increment]
-                 [:j :volume_decrement]
-                 [:l :fastforward]
-                 [:h :rewind]
-                 ]}
-
-        ;; app launcher mode
         {:des "App Mode - launch apps"
          :rules [
                  ;; left side
                  [:!CTOw [:open "/Applications/Microsoft Word.app"]]
-                 [:!CTOe [:open "/Applications/Emacs.app"]]
+                 [:!CTOe [:open "/usr/local/Cellar/emacs-plus@28/28.0.50/Emacs.app"]]
+                 ;; [:!CTOe [:open "/usr/local/Cellar/emacs-plus@27/27.1/Emacs.app"]]
                  [:!CTOr [:open "/Applications/Zotero.app"]]
                  [:!CTOt [:open "/Applications/Alacritty.app"]]
                  [:!CTOd [:open "/Applications/Discord.app"]]
@@ -258,8 +240,40 @@
                  [:!CTOn [:open "/Applications/Notability.app"]]
                  [:!CTOm [:open "/System/Applications/Music.app"]]
                  [:!CTOl [:open "/Applications/XMind.app"]]
-                 [:!CTObackslash [:open "/System/Applications/Messages.app"]]
+                 [:!CTObackslash [:open "/System/Applications/Messages.app"]]]}
+        ;; numpad mode
+
+        {:des "Numpad Mode"
+         :rules [:num-mode
+                 ;; modifiers
+                 [:##v :left_shift]
+                 [:##x :left_option]
+                 ;; number row
+                 [:##m :1]
+                 [:##comma :2]
+                 [:##period :3]
+                 [:##j :4]
+                 [:##k :5]
+                 [:##l :6]
+                 [:##u :7]
+                 [:##i :8]
+                 [:o :9]
+                 [:spacebar :0]
+                 [:h :keypad_period]
+                 [:##semicolon :hyphen]
+                 [:##p :equal_sign]
+                 [:!Sspacebar :!S0]
+                 [:!Oslash :backslash]
+                 [:!SOslash :!Sbackslash]
+                 [:!Ospacebar :close_bracket]
+                 [:!SOspacebar :!Sclose_bracket]
+                 [:right_command :keypad_period]
+                 [:!So :!S9]
+                 [:slash :slash]
+                 [:!Oo :open_bracket]
+                 [:!SOo :!Sopen_bracket]
                  ]}
+        ;; app launcher mode
 
         {:des "Hyper Moder - Control"
          :rules [:meh-moder
@@ -319,6 +333,8 @@
 
         {:des "SuperDuper Mode - Navigation [VI style]"
          :rules [:superduper-mode
+                 ;; num-mode
+                 ;; [:##j :3 [["num-mode" 1]] ["superduper-mode" 1]]
                  ;; modifiers
                  [:##s :left_shift]
                  [:##a :left_option]
